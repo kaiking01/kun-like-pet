@@ -111,55 +111,71 @@ body {
 }
 @keyframes dsp-water { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px); } }
 
-/* ================= 蝴蝶 ================= */
+/* ================= 蝴蝶（从外飞入：绕花 / 绕猫逗玩） ================= */
 .dsp-butterflies {
   position: absolute; inset: 0; z-index: 15; pointer-events: none;
   opacity: 0; transition: opacity 0.6s ease;
 }
 .dsp-butterflies--on { opacity: 1; }
 .dsp-bfly { position: absolute; font-size: 20px; }
-.dsp-bfly--1 { left: 6px; top: 58px; animation: dsp-fly1 7s ease-in-out infinite; }
-.dsp-bfly--2 { left: 78px; top: 26px; animation: dsp-fly2 8.6s ease-in-out infinite; }
-.dsp-bfly--3 { left: 32px; top: 82px; animation: dsp-fly3 6.2s ease-in-out infinite; }
+/* 1：从左侧飞入 → 绕花一圈 → 右侧飞出 */
+.dsp-bfly--1 { left: -60px; top: 90px; animation: dsp-fly1 12s ease-in-out infinite; }
+/* 2：从右侧飞入 → 绕小猫转圈逗猫 → 左侧飞出 */
+.dsp-bfly--2 { left: 250px; top: 30px; animation: dsp-fly2 14s ease-in-out infinite; }
+/* 3：从左下飞入 → 绕花半圈 + 绕猫半圈 → 左下飞出 */
+.dsp-bfly--3 { left: -60px; top: 150px; animation: dsp-fly3 13s ease-in-out infinite; }
 .dsp-bfly-wing { display: inline-block; animation: dsp-flap3d 0.32s ease-in-out infinite; }
-.dsp-bfly--2 .dsp-bfly-wing { animation-duration: 0.24s; }
-.dsp-bfly--3 .dsp-bfly-wing { animation-duration: 0.4s; }
+.dsp-bfly--2 .dsp-bfly-wing { animation-duration: 0.26s; }
+.dsp-bfly--3 .dsp-bfly-wing { animation-duration: 0.38s; }
 @keyframes dsp-flap3d {
   0%, 100% { transform: perspective(400px) rotateY(0deg); }
   50% { transform: perspective(400px) rotateY(78deg); }
 }
+/* 绕花：飞入 → 绕花丛一圈（带 banking 倾斜 + 远近缩放）→ 右侧飞出 */
 @keyframes dsp-fly1 {
-  0%, 12% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  24% { transform: translate3d(52px, -30px, 24px) rotateZ(-16deg) scale(1.14); }
-  30% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
-  44% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
-  56% { transform: translate3d(6px, -72px, -24px) rotateZ(12deg) scale(0.9); }
-  62% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
-  76% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
-  88% { transform: translate3d(-24px, -46px, 14px) rotateZ(18deg) scale(1.08); }
-  94% { transform: translate3d(-14px, -48px, 14px) rotateZ(-10deg) scale(1.08); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  7% { transform: translate3d(95px, 5px, 10px) rotateZ(8deg) scale(1); }
+  12% { transform: translate3d(115px, 15px, 16px) rotateZ(-6deg) scale(1.08); }
+  20% { transform: translate3d(152px, 28px, 20px) rotateZ(-14deg) scale(1.1); }
+  28% { transform: translate3d(162px, -10px, 12px) rotateZ(10deg) scale(1.02); }
+  36% { transform: translate3d(132px, -36px, 0px) rotateZ(16deg) scale(0.96); }
+  44% { transform: translate3d(95px, -26px, -8px) rotateZ(-10deg) scale(0.92); }
+  52% { transform: translate3d(84px, 10px, -4px) rotateZ(-16deg) scale(0.96); }
+  60% { transform: translate3d(115px, 15px, 10px) rotateZ(6deg) scale(1.05); }
+  68% { transform: translate3d(172px, -5px, 18px) rotateZ(14deg) scale(1.08); }
+  78% { transform: translate3d(300px, -20px, 24px) rotateZ(10deg) scale(1.12); }
+  90%, 100% { transform: translate3d(340px, -15px, 24px) rotateZ(0deg) scale(1.1); }
 }
+/* 绕猫：右侧飞入 → 绕小猫头部转圈逗它 → 左侧飞出 */
 @keyframes dsp-fly2 {
-  0%, 10% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  22% { transform: translate3d(-54px, 14px, -18px) rotateZ(14deg) scale(0.92); }
-  28% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
-  40% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
-  52% { transform: translate3d(-8px, -40px, 22px) rotateZ(-16deg) scale(1.12); }
-  58% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
-  72% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
-  84% { transform: translate3d(40px, -10px, -12px) rotateZ(-14deg) scale(0.94); }
-  92% { transform: translate3d(30px, -12px, -12px) rotateZ(10deg) scale(0.94); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  6% { transform: translate3d(-70px, 35px, 12px) rotateZ(-10deg) scale(1.05); }
+  12% { transform: translate3d(-60px, 60px, 18px) rotateZ(6deg) scale(1.1); }
+  20% { transform: translate3d(-95px, 76px, 16px) rotateZ(14deg) scale(1.08); }
+  28% { transform: translate3d(-130px, 60px, 8px) rotateZ(12deg) scale(1); }
+  36% { transform: translate3d(-136px, 30px, -6px) rotateZ(-10deg) scale(0.94); }
+  44% { transform: translate3d(-100px, 14px, -10px) rotateZ(-16deg) scale(0.9); }
+  52% { transform: translate3d(-70px, 30px, 0px) rotateZ(8deg) scale(0.98); }
+  60% { transform: translate3d(-85px, 52px, 14px) rotateZ(-8deg) scale(1.08); }
+  68% { transform: translate3d(-115px, 20px, 20px) rotateZ(12deg) scale(1.12); }
+  78% { transform: translate3d(-200px, -10px, 24px) rotateZ(10deg) scale(1.14); }
+  90%, 100% { transform: translate3d(-240px, 5px, 24px) rotateZ(0deg) scale(1.1); }
 }
+/* 串场：左下飞入 → 绕花半圈 → 绕猫半圈 → 左下飞出 */
 @keyframes dsp-fly3 {
-  0%, 8% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  16% { transform: translate3d(24px, -20px, 10px) rotateZ(-10deg) scale(1.08); }
-  24% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
-  36% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
-  46% { transform: translate3d(-14px, -48px, 6px) rotateZ(12deg) scale(1.02); }
-  54% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
-  66% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
-  78% { transform: translate3d(-34px, -18px, -10px) rotateZ(14deg) scale(0.94); }
-  88% { transform: translate3d(-16px, -22px, -10px) rotateZ(-10deg) scale(0.94); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  8% { transform: translate3d(90px, -60px, 10px) rotateZ(10deg) scale(1.04); }
+  16% { transform: translate3d(140px, -75px, 14px) rotateZ(-12deg) scale(1.08); }
+  24% { transform: translate3d(150px, -105px, 10px) rotateZ(8deg) scale(1.02); }
+  32% { transform: translate3d(120px, -122px, 0px) rotateZ(16deg) scale(0.96); }
+  40% { transform: translate3d(85px, -102px, -8px) rotateZ(-12deg) scale(0.92); }
+  48% { transform: translate3d(120px, -96px, 6px) rotateZ(-16deg) scale(0.98); }
+  56% { transform: translate3d(186px, -80px, 16px) rotateZ(10deg) scale(1.06); }
+  64% { transform: translate3d(226px, -96px, 20px) rotateZ(-8deg) scale(1.1); }
+  72% { transform: translate3d(216px, -56px, 16px) rotateZ(14deg) scale(1.06); }
+  80% { transform: translate3d(180px, -46px, 8px) rotateZ(10deg) scale(1); }
+  88% { transform: translate3d(120px, -36px, -6px) rotateZ(-10deg) scale(0.94); }
+  94% { transform: translate3d(20px, -10px, -12px) rotateZ(-16deg) scale(0.9); }
 }
 
 /* ================= 打盹特效 ================= */
