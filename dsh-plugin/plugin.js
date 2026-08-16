@@ -1,25 +1,25 @@
 /**
- * Kun Like 桌宠 · DeepSeek Harness (DSH) 动态插件源码
+ * Kun Like 桌宠 · DeepSeek Harness (DSH) 动态插件源码（HTML+CSS 版）
  * ----------------------------------------------------------
- * 这是本仓库桌宠的 DSH 动态 Cordis 插件版本（Client half，Canvas 3D 版）。
- * 与根目录 index.html 的独立网页版功能一致：
- * Canvas 2D 自绘 3D 软渲染猫 —— 真实渐变光影、3D 头部转向（特征随转角
- * 收缩错位）、弹性呼吸/走路/尾巴、鼠标追踪、不对称眨眼、舔毛/打哈欠/
- * 歪头好奇/打盹做梦、喝水后变身巨猫敲屏提醒。纯文字卖萌，零依赖。
+ * 这是本仓库桌宠的 DSH 动态 Cordis 插件版本（Client half）。
+ * 与根目录 html+css版本的小猫.html 独立网页版功能一致：
+ * 纯 DOM/CSS 的 3D 真猫 —— CSS transform + transition 驱动动作
+ * （转身/走路/眨眼/打哈欠/扑蝴蝶全由 CSS 动画与过渡完成，无 canvas）。
+ * 纯文字卖萌，零依赖。
  *
  * 使用方式见同目录 README.md。
  * 该文件内容就是 cordis_define 的 code.client 函数体（纯 JavaScript，
  * 无 JSX / TypeScript，无需打包）。
  */
 return {
-  name: 'cute-desk-pet-v5',
+  name: 'cute-desk-pet-htmlcss',
   inject: ['timer'],
   apply(ctx) {
     const slots = ctx.get('slots')
     if (slots === undefined) return
 
     styles.insert(`
-/* ================= container ================= */
+/* ================= 桌宠容器 ================= */
 .dspet {
   position: fixed; right: 24px; bottom: 24px;
   width: 240px; height: 200px;
@@ -29,10 +29,10 @@ return {
 }
 .dspet:active { cursor: grabbing; }
 
-/* ================= scene ================= */
+/* ================= 场景（3D 透视） ================= */
 .dsp-scene {
   position: absolute; left: 0; bottom: 0; width: 240px; height: 200px;
-  overflow: hidden;
+  perspective: 900px; perspective-origin: 50% 90%;
 }
 .dsp-shadow {
   position: absolute; bottom: 0; width: 96px; height: 20px;
@@ -41,7 +41,7 @@ return {
   transition: left 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ================= vase ================= */
+/* ================= 花瓶 ================= */
 .dsp-vase { position: absolute; left: 6px; bottom: 0; width: 88px; height: 60px; z-index: 4; }
 .dsp-vase-body {
   position: absolute; left: 0; bottom: 0; width: 88px; height: 52px;
@@ -63,7 +63,7 @@ return {
   border-bottom: 2px solid #4a6a8a; border-radius: 0 0 10px 10px;
 }
 
-/* ================= flowers ================= */
+/* ================= 花朵 ================= */
 .dsp-flower {
   position: absolute; bottom: 46px; width: 20px; height: 52px;
   transform-origin: 50% 100%;
@@ -93,7 +93,7 @@ return {
 @keyframes dsp-sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
 @keyframes dsp-blossom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-/* ================= water bowl ================= */
+/* ================= 水碗 ================= */
 .dsp-bowl {
   position: absolute; left: 96px; bottom: 2px; width: 44px; height: 18px; z-index: 7;
   background: linear-gradient(180deg, #e8f4ff, #cfe9ff);
@@ -109,19 +109,16 @@ return {
 }
 @keyframes dsp-water { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px); } }
 
-/* ================= butterflies（从外飞入：绕花 / 绕猫逗玩） ================= */
+/* ================= 蝴蝶（自然飞行：转弯倾斜 + 悬停 + 急窜） ================= */
 .dsp-butterflies {
   position: absolute; inset: 0; z-index: 15; pointer-events: none;
   opacity: 0; transition: opacity 0.6s ease;
 }
 .dsp-butterflies--on { opacity: 1; }
 .dsp-bfly { position: absolute; font-size: 20px; }
-/* 1：从左侧飞入 → 绕花一圈 → 右侧飞出 */
-.dsp-bfly--1 { left: -60px; top: 90px; animation: dsp-fly1 12s ease-in-out infinite; }
-/* 2：从右侧飞入 → 绕小猫转圈逗猫 → 左侧飞出 */
-.dsp-bfly--2 { left: 250px; top: 30px; animation: dsp-fly2 14s ease-in-out infinite; }
-/* 3：从左下飞入 → 绕花半圈 + 绕猫半圈 → 左下飞出 */
-.dsp-bfly--3 { left: -60px; top: 150px; animation: dsp-fly3 13s ease-in-out infinite; }
+.dsp-bfly--1 { left: 300px; top: 90px; animation: dsp-fly1 11s ease-in-out infinite; }
+.dsp-bfly--2 { left: -60px; top: 60px; animation: dsp-fly2 13s ease-in-out infinite; }
+.dsp-bfly--3 { left: -60px; top: 150px; animation: dsp-fly3 12s ease-in-out infinite; }
 .dsp-bfly-wing {
   display: inline-block;
   animation: dsp-flap3d 0.32s ease-in-out infinite;
@@ -132,54 +129,352 @@ return {
   0%, 100% { transform: perspective(400px) rotateY(0deg); }
   50% { transform: perspective(400px) rotateY(78deg); }
 }
-/* 绕花：飞入 → 绕花丛一圈（带 banking 倾斜 + 远近缩放）→ 右侧飞出 */
+/* 绕花一圈：右外飞入 → 花丛正上方一圈（banking 倾斜 + 远近缩放）→ 左外飞出 */
 @keyframes dsp-fly1 {
   0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  7% { transform: translate3d(95px, 5px, 10px) rotateZ(8deg) scale(1); }
-  12% { transform: translate3d(115px, 15px, 16px) rotateZ(-6deg) scale(1.08); }
-  20% { transform: translate3d(152px, 28px, 20px) rotateZ(-14deg) scale(1.1); }
-  28% { transform: translate3d(162px, -10px, 12px) rotateZ(10deg) scale(1.02); }
-  36% { transform: translate3d(132px, -36px, 0px) rotateZ(16deg) scale(0.96); }
-  44% { transform: translate3d(95px, -26px, -8px) rotateZ(-10deg) scale(0.92); }
-  52% { transform: translate3d(84px, 10px, -4px) rotateZ(-16deg) scale(0.96); }
-  60% { transform: translate3d(115px, 15px, 10px) rotateZ(6deg) scale(1.05); }
-  68% { transform: translate3d(172px, -5px, 18px) rotateZ(14deg) scale(1.08); }
-  78% { transform: translate3d(300px, -20px, 24px) rotateZ(10deg) scale(1.12); }
-  90%, 100% { transform: translate3d(340px, -15px, 24px) rotateZ(0deg) scale(1.1); }
+  8% { transform: translate3d(-120px, -20px, 10px) rotateZ(10deg) scale(1.05); }
+  14% { transform: translate3d(-215px, 18px, 16px) rotateZ(-12deg) scale(1.1); }
+  20% { transform: translate3d(-248px, 30px, 18px) rotateZ(-18deg) scale(1.12); }
+  26% { transform: translate3d(-262px, 8px, 12px) rotateZ(8deg) scale(1.06); }
+  32% { transform: translate3d(-246px, -20px, 4px) rotateZ(16deg) scale(1); }
+  38% { transform: translate3d(-222px, -40px, -6px) rotateZ(14deg) scale(0.95); }
+  44% { transform: translate3d(-200px, -32px, -10px) rotateZ(-8deg) scale(0.92); }
+  50% { transform: translate3d(-196px, -4px, -2px) rotateZ(-14deg) scale(0.96); }
+  56% { transform: translate3d(-216px, 20px, 12px) rotateZ(8deg) scale(1.05); }
+  64% { transform: translate3d(-262px, 4px, 18px) rotateZ(-14deg) scale(1.1); }
+  72% { transform: translate3d(-320px, -50px, 22px) rotateZ(12deg) scale(1.14); }
+  84%, 100% { transform: translate3d(-350px, -40px, 22px) rotateZ(0deg) scale(1.1); }
 }
-/* 绕猫：右侧飞入 → 绕小猫头部转圈逗它 → 左侧飞出 */
+/* 绕猫逗玩：左外飞入 → 绕猫头转一整圈 → 再绕半圈逗它 → 右外飞出 */
 @keyframes dsp-fly2 {
   0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  6% { transform: translate3d(-70px, 35px, 12px) rotateZ(-10deg) scale(1.05); }
-  12% { transform: translate3d(-60px, 60px, 18px) rotateZ(6deg) scale(1.1); }
-  20% { transform: translate3d(-95px, 76px, 16px) rotateZ(14deg) scale(1.08); }
-  28% { transform: translate3d(-130px, 60px, 8px) rotateZ(12deg) scale(1); }
-  36% { transform: translate3d(-136px, 30px, -6px) rotateZ(-10deg) scale(0.94); }
-  44% { transform: translate3d(-100px, 14px, -10px) rotateZ(-16deg) scale(0.9); }
-  52% { transform: translate3d(-70px, 30px, 0px) rotateZ(8deg) scale(0.98); }
-  60% { transform: translate3d(-85px, 52px, 14px) rotateZ(-8deg) scale(1.08); }
-  68% { transform: translate3d(-115px, 20px, 20px) rotateZ(12deg) scale(1.12); }
-  78% { transform: translate3d(-200px, -10px, 24px) rotateZ(10deg) scale(1.14); }
-  90%, 100% { transform: translate3d(-240px, 5px, 24px) rotateZ(0deg) scale(1.1); }
+  7% { transform: translate3d(130px, 58px, 10px) rotateZ(-10deg) scale(1.06); }
+  13% { transform: translate3d(196px, 76px, 16px) rotateZ(10deg) scale(1.1); }
+  19% { transform: translate3d(216px, 92px, 18px) rotateZ(-14deg) scale(1.12); }
+  25% { transform: translate3d(228px, 74px, 12px) rotateZ(8deg) scale(1.06); }
+  31% { transform: translate3d(222px, 52px, 4px) rotateZ(16deg) scale(1); }
+  37% { transform: translate3d(202px, 38px, -6px) rotateZ(14deg) scale(0.94); }
+  43% { transform: translate3d(182px, 48px, -10px) rotateZ(-8deg) scale(0.9); }
+  49% { transform: translate3d(174px, 66px, -2px) rotateZ(-14deg) scale(0.96); }
+  55% { transform: translate3d(186px, 84px, 10px) rotateZ(8deg) scale(1.04); }
+  61% { transform: translate3d(208px, 90px, 16px) rotateZ(-10deg) scale(1.1); }
+  67% { transform: translate3d(230px, 72px, 12px) rotateZ(14deg) scale(1.08); }
+  73% { transform: translate3d(200px, 40px, 6px) rotateZ(-16deg) scale(1.04); }
+  79% { transform: translate3d(236px, 50px, 16px) rotateZ(10deg) scale(1.1); }
+  86% { transform: translate3d(300px, 20px, 20px) rotateZ(-12deg) scale(1.14); }
+  94%, 100% { transform: translate3d(330px, 30px, 20px) rotateZ(0deg) scale(1.1); }
 }
-/* 串场：左下飞入 → 绕花半圈 → 绕猫半圈 → 左下飞出 */
+/* 串场：左下外飞入 → 绕花半圈 → 绕猫半圈 + 逗一下 → 左上外飞出 */
 @keyframes dsp-fly3 {
   0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  8% { transform: translate3d(90px, -60px, 10px) rotateZ(10deg) scale(1.04); }
-  16% { transform: translate3d(140px, -75px, 14px) rotateZ(-12deg) scale(1.08); }
-  24% { transform: translate3d(150px, -105px, 10px) rotateZ(8deg) scale(1.02); }
-  32% { transform: translate3d(120px, -122px, 0px) rotateZ(16deg) scale(0.96); }
-  40% { transform: translate3d(85px, -102px, -8px) rotateZ(-12deg) scale(0.92); }
-  48% { transform: translate3d(120px, -96px, 6px) rotateZ(-16deg) scale(0.98); }
-  56% { transform: translate3d(186px, -80px, 16px) rotateZ(10deg) scale(1.06); }
-  64% { transform: translate3d(226px, -96px, 20px) rotateZ(-8deg) scale(1.1); }
-  72% { transform: translate3d(216px, -56px, 16px) rotateZ(14deg) scale(1.06); }
-  80% { transform: translate3d(180px, -46px, 8px) rotateZ(10deg) scale(1); }
-  88% { transform: translate3d(120px, -36px, -6px) rotateZ(-10deg) scale(0.94); }
-  94% { transform: translate3d(20px, -10px, -12px) rotateZ(-16deg) scale(0.9); }
+  8% { transform: translate3d(85px, -62px, 8px) rotateZ(12deg) scale(1.05); }
+  14% { transform: translate3d(102px, -58px, 14px) rotateZ(-10deg) scale(1.1); }
+  20% { transform: translate3d(120px, -36px, 18px) rotateZ(-16deg) scale(1.12); }
+  26% { transform: translate3d(106px, -14px, 14px) rotateZ(10deg) scale(1.06); }
+  32% { transform: translate3d(78px, -30px, 6px) rotateZ(16deg) scale(1); }
+  40% { transform: translate3d(142px, -52px, 12px) rotateZ(-12deg) scale(1.06); }
+  46% { transform: translate3d(190px, -34px, 16px) rotateZ(10deg) scale(1.1); }
+  52% { transform: translate3d(222px, -24px, 18px) rotateZ(-14deg) scale(1.12); }
+  58% { transform: translate3d(224px, -46px, 12px) rotateZ(8deg) scale(1.06); }
+  64% { transform: translate3d(200px, -60px, 2px) rotateZ(16deg) scale(0.98); }
+  70% { transform: translate3d(182px, -68px, 10px) rotateZ(-10deg) scale(1.05); }
+  78% { transform: translate3d(230px, -60px, 18px) rotateZ(12deg) scale(1.12); }
+  86% { transform: translate3d(150px, -130px, 22px) rotateZ(-14deg) scale(1.14); }
+  94%, 100% { transform: translate3d(-30px, -150px, 22px) rotateZ(0deg) scale(1.1); }
 }
 
-/* ================= nap fx ================= */
+/* ================= 猫咪 ================= */
+.dsp-cat-z {
+  position: absolute; left: 104px; bottom: 0; width: 124px; height: 116px;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat {
+  position: absolute; inset: 0;
+  transform: translateZ(30px);
+  transform-style: preserve-3d;
+}
+/* 趴睡：整体下移贴地、身体单独压扁 + 肚子呼吸起伏、头从脖子前倾埋爪、前爪前伸、尾巴安静 */
+.dsp-cat--sleep {
+  transform: translateZ(30px) translateY(10px);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat--sleep .dsp-h3d {
+  transform-origin: 50% 100%;
+}
+.dsp-cat--sleep .dsp-cat-body {
+  transform: translateZ(6px) translateY(8px) scale(1.22, 0.58);
+  animation: dsp-sleepbreathe 3.4s ease-in-out infinite;
+}
+.dsp-cat--sleep .dsp-cat-tail {
+  animation: none;
+  transform: rotate(2deg);
+}
+.dsp-cat--sleep .dsp-cat-paw--l {
+  transform: translate(7px, -3px) rotate(12deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat--sleep .dsp-cat-paw--r {
+  transform: translate(-7px, -3px) rotate(-12deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes dsp-sleepbreathe {
+  0%, 100% { transform: translateZ(6px) translateY(8px) scale(1.22, 0.58); }
+  50% { transform: translateZ(6px) translateY(7px) scale(1.24, 0.62); }
+}
+/* 捕蝴蝶（狩猎模式）：蓄力 → 前倾扑击 → 扑空落地 → 回弹；尾巴激动甩、耳朵竖起、眼睛瞪大 */
+.dsp-cat--hunt {
+  animation: dsp-pounce 1.9s cubic-bezier(0.34, 1.3, 0.64, 1) infinite;
+}
+.dsp-cat--hunt .dsp-cat-tail {
+  animation: dsp-tailexcite 0.6s ease-in-out infinite;
+}
+.dsp-cat--hunt .dsp-cat-ear--l,
+.dsp-cat--hunt .dsp-cat-ear--r {
+  animation: dsp-earalert 1.6s ease-in-out infinite;
+}
+.dsp-cat--hunt .dsp-cat-ear--r { animation-delay: 0.4s; }
+.dsp-cat--hunt .dsp-cat-eye {
+  animation: none !important;
+  transform: scale(1.12);
+}
+@keyframes dsp-pounce {
+  0%, 100% { transform: translateZ(30px) translateY(0) scale(1, 1) rotateX(0deg); }
+  12% { transform: translateZ(30px) translateY(3px) scale(0.94, 0.9) rotateX(0deg); }
+  22% { transform: translateZ(30px) translateY(2px) scale(0.9, 0.86) rotateX(2deg); }
+  36% { transform: translateZ(30px) translateY(-31px) scale(1.1, 0.88) rotateX(-14deg); }
+  50% { transform: translateZ(30px) translateY(-15px) scale(1.02, 1) rotateX(-6deg); }
+  62% { transform: translateZ(30px) translateY(6px) scale(1.18, 0.82) rotateX(5deg); }
+  76% { transform: translateZ(30px) translateY(-4px) scale(1.05, 0.95) rotateX(0deg); }
+  89% { transform: translateZ(30px) translateY(1px) scale(0.95, 1.02) rotateX(0deg); }
+}
+@keyframes dsp-tailexcite {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(18deg); }
+}
+@keyframes dsp-earalert {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
+}
+.dsp-cat-walk {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  animation: dsp-idlebob 3.6s ease-in-out infinite;
+}
+.dsp-cat-walk--on { animation: dsp-walkbob 0.75s ease-in-out infinite; }
+@keyframes dsp-idlebob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes dsp-walkbob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  20% { transform: translateY(-5px) rotate(-2.5deg); }
+  40% { transform: translateY(0) rotate(0deg); }
+  60% { transform: translateY(-5px) rotate(2.5deg); }
+  80% { transform: translateY(0) rotate(0deg); }
+}
+.dsp-cat-tail {
+  position: absolute; right: -14px; bottom: 8px; width: 46px; height: 15px;
+  background: linear-gradient(180deg, #ffe8c8, #ffd9a6);
+  border: 2px solid rgba(214, 164, 112, 0.35);
+  border-radius: 4px 12px 12px 4px;
+  transform-origin: left center;
+  animation: dsp-tailwag 2.4s ease-in-out infinite;
+}
+@keyframes dsp-tailwag {
+  0%, 100% { transform: rotate(9deg); }
+  25% { transform: rotate(-7deg); }
+  50% { transform: rotate(13deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+/* ============ 3D 头（正/后两层） ============ */
+.dsp-h3d {
+  position: absolute; left: 50%; bottom: 26px; margin-left: -46px;
+  width: 92px; height: 84px;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-h3d-f {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 35% 25%, #fff3dd, #ffe3b8 55%, #ffd9a3);
+  border: 2px solid rgba(214, 164, 112, 0.4);
+  border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
+  box-shadow: inset 0 -6px 12px rgba(230, 170, 110, 0.22);
+  transform: translateZ(15px);
+}
+.dsp-h3d-b {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, #f6d3a4, #f0c48e 60%, #e9b87e);
+  border: 2px solid rgba(214, 164, 112, 0.35);
+  border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
+  transform: rotateY(180deg) translateZ(15px);
+}
+.dsp-cat-ear {
+  position: absolute; top: -16px; width: 0; height: 0;
+  border-left: 20px solid transparent; border-right: 20px solid transparent;
+  border-bottom: 30px solid #ffe0b2;
+  filter: drop-shadow(0 0 1px rgba(214, 164, 112, 0.4));
+}
+.dsp-cat-ear--l { left: 8px; transform-origin: 50% 100%; animation: dsp-earchirp-l 8s ease-in-out infinite; }
+.dsp-cat-ear--r { right: 8px; transform-origin: 50% 100%; animation: dsp-earchirp-r 9s ease-in-out infinite; }
+.dsp-cat-ear--l::after, .dsp-cat-ear--r::after {
+  content: ''; position: absolute; top: 12px; left: -10px;
+  width: 0; height: 0;
+  border-left: 10px solid transparent; border-right: 10px solid transparent;
+  border-bottom: 15px solid #ffb3c6;
+}
+@keyframes dsp-earchirp-l {
+  0%, 88%, 100% { transform: rotate(-12deg); }
+  91% { transform: rotate(-2deg); }
+  94% { transform: rotate(-12deg); }
+}
+@keyframes dsp-earchirp-r {
+  0%, 78%, 100% { transform: rotate(12deg); }
+  82% { transform: rotate(2deg); }
+  86% { transform: rotate(12deg); }
+}
+
+/* 脸部特征在正面板 */
+.dsp-cat-face {
+  position: absolute; top: 16px; left: 0; width: 100%; height: 58px;
+  transform-style: preserve-3d;
+}
+.dsp-eye-pos { position: absolute; top: 6px; transition: transform 0.3s ease; }
+.dsp-eye-pos--l { left: 18px; }
+.dsp-eye-pos--r { right: 18px; }
+.dsp-cat-eye {
+  width: 13px; height: 16px;
+  background: #5b4636; border-radius: 50%;
+  position: relative;
+}
+.dsp-cat-eye::after {
+  content: ''; position: absolute; left: 3px; top: 3px; width: 4px; height: 5px;
+  background: rgba(255, 255, 255, 0.85); border-radius: 50%;
+}
+.dsp-eye-pos--l .dsp-cat-eye { animation: dsp-blinkL 4.2s ease-in-out infinite; }
+.dsp-eye-pos--r .dsp-cat-eye { animation: dsp-blinkR 5.9s ease-in-out infinite; }
+@keyframes dsp-blinkL {
+  0%, 86%, 100% { transform: scaleY(1); }
+  88%, 91% { transform: scaleY(0.08); }
+}
+@keyframes dsp-blinkR {
+  0%, 60%, 100% { transform: scaleY(1); }
+  62%, 65% { transform: scaleY(0.08); }
+  78%, 84% { transform: scaleY(0.06); }
+}
+.dsp-cat-eye--happy {
+  width: 12px; height: 7px; background: transparent;
+  border-top: 3px solid #5b4636; border-radius: 0; animation: none !important;
+}
+.dsp-cat-eye--happy::after { display: none; }
+.dsp-cat-eye--closed {
+  background: transparent; height: 6px;
+  border-bottom: 3px solid #5b4636; border-radius: 0; animation: none !important;
+}
+.dsp-cat-eye--closed::after { display: none; }
+.dsp-cat-nose {
+  position: absolute; left: 50%; top: 22px; margin-left: -4px;
+  width: 8px; height: 6px;
+  background: #ff9db4; border-radius: 4px 4px 6px 6px;
+  animation: dsp-sniff 5.2s ease-in-out infinite;
+}
+@keyframes dsp-sniff {
+  0%, 90%, 100% { transform: scaleY(1); }
+  93% { transform: scaleY(1.25); }
+  96% { transform: scaleY(1); }
+}
+.dsp-cat-blush {
+  position: absolute; top: 30px; width: 14px; height: 8px;
+  background: rgba(255, 138, 158, 0.75); border-radius: 50%;
+}
+.dsp-cat-blush--l { left: 6px; }
+.dsp-cat-blush--r { right: 6px; }
+.dsp-cat-mouth {
+  position: absolute; left: 50%; top: 32px; margin-left: -6px;
+  width: 12px; height: 7px;
+  border-bottom: 2.5px solid #5b4636; border-radius: 0 0 12px 12px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.dsp-cat-yawn {
+  position: absolute; left: 50%; top: 26px; margin-left: -10px;
+  width: 20px; height: 16px;
+  background: #7a4a35; border-radius: 2px 2px 12px 12px;
+  transform: scale(0); transform-origin: top center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+.dsp-cat-yawn::after {
+  content: ''; position: absolute; left: 4px; top: 8px; width: 12px; height: 7px;
+  background: #ff9db4; border-radius: 8px 8px 12px 12px;
+}
+.dsp-cat--yawn .dsp-cat-yawn { transform: scale(1); opacity: 1; }
+.dsp-cat--yawn .dsp-cat-mouth { transform: scale(0); opacity: 0; }
+.dsp-whisker {
+  position: absolute; top: 26px; width: 26px; height: 2px;
+  background: rgba(91, 70, 54, 0.45); border-radius: 2px;
+  transform-origin: 100% 50%;
+}
+.dsp-whisker--l1 { left: -14px; animation: dsp-whiskL1 6s ease-in-out infinite; }
+.dsp-whisker--l2 { left: -14px; top: 35px; animation: dsp-whiskL2 7s ease-in-out infinite; }
+.dsp-whisker--r1 { right: -14px; animation: dsp-whiskR1 6.4s ease-in-out infinite; }
+.dsp-whisker--r2 { right: -14px; top: 35px; animation: dsp-whiskR2 7.4s ease-in-out infinite; }
+@keyframes dsp-whiskL1 {
+  0%, 88%, 100% { transform: rotate(8deg); }
+  92% { transform: rotate(12deg); }
+  96% { transform: rotate(8deg); }
+}
+@keyframes dsp-whiskL2 {
+  0%, 84%, 100% { transform: rotate(-6deg); }
+  89% { transform: rotate(-10deg); }
+  94% { transform: rotate(-6deg); }
+}
+@keyframes dsp-whiskR1 {
+  0%, 86%, 100% { transform: rotate(-8deg); }
+  90% { transform: rotate(-12deg); }
+  94% { transform: rotate(-8deg); }
+}
+@keyframes dsp-whiskR2 {
+  0%, 82%, 100% { transform: rotate(6deg); }
+  87% { transform: rotate(10deg); }
+  92% { transform: rotate(6deg); }
+}
+.dsp-cat-body {
+  position: absolute; left: 50%; bottom: 2px; margin-left: -33px;
+  width: 66px; height: 40px;
+  background: linear-gradient(180deg, #fff0d8, #ffdfae);
+  border: 2px solid rgba(214, 164, 112, 0.35);
+  border-radius: 20px 20px 14px 14px;
+  box-shadow: inset 0 -5px 10px rgba(230, 170, 110, 0.2);
+  transform: translateZ(6px);
+}
+.dsp-cat-scarf {
+  position: absolute; left: 50%; bottom: 22px; margin-left: -30px;
+  width: 60px; height: 13px;
+  background: linear-gradient(180deg, #ff9dbe, #ff7ea8);
+  border-radius: 7px;
+  box-shadow: 0 2px 4px rgba(255, 126, 168, 0.35);
+  transform: translateZ(12px);
+}
+.dsp-cat-scarf::after {
+  content: ''; position: absolute; left: 50%; top: 5px; margin-left: -7px;
+  width: 14px; height: 11px; background: #ffb3c9; border-radius: 4px;
+}
+.dsp-cat-paw {
+  position: absolute; bottom: 0; width: 26px; height: 14px;
+  background: #ffe8c8; border: 2px solid rgba(214, 164, 112, 0.35);
+  border-radius: 50%;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat-paw--l { left: 28px; }
+.dsp-cat-paw--r { right: 28px; }
+.dsp-cat-paw--up { animation: dsp-pawup 2.2s ease-in-out infinite; }
+.dsp-cat-paw--swat { animation: dsp-swat 1.2s ease-in-out infinite; }
+@keyframes dsp-pawup { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-17px) rotate(-12deg); } }
+@keyframes dsp-swat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(-8px, -26px) rotate(-24deg); }
+  60% { transform: translate(-2px, -8px) rotate(-8deg); }
+}
+
+/* ================= 打盹特效 ================= */
 .dsp-napfx {
   position: absolute; inset: 0; z-index: 12; pointer-events: none;
   opacity: 0; transition: opacity 0.6s ease;
@@ -189,16 +484,16 @@ return {
   position: absolute; font-size: 16px; font-weight: 700; color: #8fb8e8;
   animation: dsp-zz 2.6s ease-in-out infinite; opacity: 0;
 }
-.dsp-zzz span:nth-child(1) { left: 138px; top: 34px; }
-.dsp-zzz span:nth-child(2) { left: 156px; top: 22px; animation-delay: 0.8s; }
-.dsp-zzz span:nth-child(3) { left: 174px; top: 10px; animation-delay: 1.6s; }
+.dsp-zzz span:nth-child(1) { left: 138px; top: 96px; }
+.dsp-zzz span:nth-child(2) { left: 156px; top: 84px; animation-delay: 0.8s; }
+.dsp-zzz span:nth-child(3) { left: 174px; top: 72px; animation-delay: 1.6s; }
 @keyframes dsp-zz {
   0% { transform: translateY(10px) scale(0.6); opacity: 0; }
   30% { opacity: 1; }
   100% { transform: translateY(-26px) scale(1.15); opacity: 0; }
 }
 .dsp-snot {
-  position: absolute; left: 148px; top: 98px; width: 12px; height: 12px;
+  position: absolute; left: 148px; top: 112px; width: 12px; height: 12px;
   background: rgba(170, 215, 250, 0.9);
   border: 1.5px solid rgba(120, 170, 220, 0.6);
   border-radius: 50%;
@@ -212,7 +507,7 @@ return {
   100% { transform: scale(2.1); opacity: 0; }
 }
 .dsp-dream {
-  position: absolute; left: 118px; top: 58px;
+  position: absolute; left: 104px; top: 66px;
   padding: 6px 10px; background: #fff;
   border: 2px solid rgba(214, 164, 112, 0.4); border-radius: 14px;
   font-size: 13px; color: #8a5a3a; white-space: nowrap;
@@ -227,13 +522,7 @@ return {
   100% { transform: scale(1.3); opacity: 0; }
 }
 
-/* ================= canvas cat ================= */
-.dsp-canvas {
-  position: absolute; left: 0; bottom: 0; width: 240px; height: 200px;
-  z-index: 3; pointer-events: none;
-}
-
-/* ================= bubble / hearts / close / summon ================= */
+/* ================= 气泡 / 爱心 / 关闭 / 召唤 ================= */
 .dsp-bubble {
   position: absolute; left: 58%; bottom: 128px; transform: translateX(-50%);
   max-width: 250px; min-width: 92px;
@@ -261,8 +550,8 @@ return {
   from { transform: translateX(-50%) scale(0.6); opacity: 0; }
   to { transform: translateX(-50%) scale(1); opacity: 1; }
 }
-.dsp-hearts { position: absolute; left: 150px; top: 22px; width: 0; height: 0; pointer-events: none; z-index: 16; }
-.dsp-hearts span {
+.dsp-hearts { position: absolute; left: 150px; top: 22px; width: 0; height: 0; pointer-events: none; z-index: 16; opacity: 0; }
+.dsp-hearts--go span {
   position: absolute; font-size: 18px;
   animation: dsp-heart 1.3s ease-out forwards;
   opacity: 0;
@@ -278,7 +567,7 @@ return {
 .dsp-close {
   position: absolute; top: 0; right: 0; width: 22px; height: 22px;
   background: rgba(90, 60, 30, 0.45); color: #fff;
-  border-radius: 50%; font-size: 13px; line-height: 20px; text-align: center;
+  border-radius: 50%; font-size: 12px; line-height: 20px; text-align: center;
   cursor: pointer; opacity: 0; transition: opacity 0.18s; z-index: 40;
 }
 .dspet:hover .dsp-close { opacity: 1; }
@@ -294,7 +583,7 @@ return {
 }
 .dspet-summon:hover { transform: scale(1.06); }
 
-/* ================= BIG cat knock ================= */
+/* ================= 巨猫敲屏 ================= */
 .dsp-big {
   position: fixed; inset: 0; z-index: 60; pointer-events: none;
   animation: dsp-big-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -318,6 +607,7 @@ return {
 .dsp-big-cat {
   position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%);
   width: min(640px, 66vw); height: 380px;
+  transform-style: preserve-3d;
 }
 .dsp-big-ear {
   position: absolute; top: -58px; width: 0; height: 0;
@@ -341,10 +631,11 @@ return {
   border-radius: 50% 50% 44% 44% / 54% 54% 46% 46%;
   box-shadow: 0 24px 60px rgba(160, 110, 60, 0.3), inset 0 -18px 34px rgba(230, 170, 110, 0.25);
   animation: dsp-bigbob 2.6s ease-in-out infinite;
+  transform-style: preserve-3d;
 }
 @keyframes dsp-bigbob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateX(-50%) perspective(900px) rotateY(-7deg) translateY(0); }
+  50% { transform: translateX(-50%) perspective(900px) rotateY(-7deg) translateY(-10px); }
 }
 .dsp-big-face { position: absolute; top: 44px; left: 0; width: 100%; height: 200px; }
 .dsp-big-eye {
@@ -422,7 +713,7 @@ return {
   to { transform: translateX(-50%) scale(1); opacity: 1; }
 }
 
-/* ================= settings ================= */
+/* ================= 设置（settings.section） ================= */
 .dsp-settings {
   max-width: 460px; display: flex; flex-direction: column; gap: 10px; padding: 4px 0;
 }
@@ -447,6 +738,21 @@ return {
   border: 1px solid rgba(127, 127, 127, 0.3);
   background: transparent; color: inherit;
 }
+.dsp-settings-inline { display: flex; align-items: center; gap: 4px; }
+.dsp-num {
+  width: 62px; padding: 3px 6px; font-size: 13px; border-radius: 8px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  background: transparent; color: inherit;
+}
+.dsp-unit { font-size: 12px; opacity: 0.7; }
+.dsp-settings-row--chips { justify-content: flex-start; gap: 6px; flex-wrap: wrap; padding-top: 2px; }
+.dsp-chip {
+  padding: 3px 10px; font-size: 12px; border-radius: 999px;
+  border: 1px solid rgba(214, 164, 112, 0.45);
+  background: transparent; color: inherit; cursor: pointer;
+}
+.dsp-chip:hover { background: rgba(127, 127, 127, 0.12); }
+.dsp-chip--on { background: #ff7ea8; border-color: #ff7ea8; color: #fff; }
 .dsp-switch {
   position: relative; width: 42px; height: 22px; padding: 0;
   border-radius: 999px; border: 1px solid rgba(127, 127, 127, 0.35);
@@ -463,227 +769,53 @@ return {
 `)
 
     // ============================================================
-    // Canvas 3D 软渲染器：真实光影 + 3D 头部转向 + 弹性动作
+    // HTML+CSS 3D 真猫：CSS transform + transition 驱动，无 canvas
     // ============================================================
-    function createCatRenderer(canvas) {
-      const W = 240, H = 200
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
-      canvas.width = W * dpr
-      canvas.height = H * dpr
-      const ctx = canvas.getContext('2d')
-      ctx.scale(dpr, dpr)
-
-      const S = {
-        x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1,
-        walking: false, closed: false, happy: false,
-        look: { x: 0, y: 0 },
-        mode: 'idle',
-        t: 0,
-      }
-      const blink = { l: 0, r: 0 }
-      let blinkLAt = 1600, blinkRAt = 3400
-      const ear = { l: 0, r: 0 }
-      let earLAt = 4200, earRAt = 6100
-      let last = Date.now()
-
-      function ell(x, y, rx, ry, c1, c2, alpha) {
-        const g = ctx.createRadialGradient(x - rx * 0.35, y - ry * 0.45, rx * 0.12, x, y, Math.max(rx, ry))
-        g.addColorStop(0, c1)
-        g.addColorStop(1, c2)
-        if (alpha !== undefined) ctx.globalAlpha = alpha
-        ctx.fillStyle = g
-        ctx.beginPath()
-        ctx.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.globalAlpha = 1
-      }
-      function tri(x1, y1, x2, y2, x3, y3, c1, c2) {
-        const cx = (x1 + x2 + x3) / 3, cy = (y1 + y2 + y3) / 3
-        const g = ctx.createRadialGradient(cx - 2, cy - 3, 2, cx, cy, Math.max(14, Math.abs(x2 - x1)))
-        g.addColorStop(0, c1)
-        g.addColorStop(1, c2)
-        ctx.fillStyle = g
-        ctx.beginPath()
-        ctx.moveTo(x1, y1)
-        ctx.lineTo(x2, y2)
-        ctx.lineTo(x3, y3)
-        ctx.closePath()
-        ctx.fill()
-      }
-
-      function draw() {
-        const now = Date.now()
-        const dt = Math.min(80, now - last)
-        last = now
-        S.t += dt * 0.001
-        if (now > blinkLAt) { blink.l = 1; blinkLAt = now + 1800 + Math.random() * 4200 }
-        if (now > blinkRAt) { blink.r = 1; blinkRAt = now + 2400 + Math.random() * 4800 }
-        blink.l = Math.max(0, blink.l - dt / 130)
-        blink.r = Math.max(0, blink.r - dt / 150)
-        if (now > earLAt) { ear.l = 1; earLAt = now + 3000 + Math.random() * 5000 }
-        if (now > earRAt) { ear.r = 1; earRAt = now + 3500 + Math.random() * 5500 }
-        ear.l = Math.max(0, ear.l - dt / 240)
-        ear.r = Math.max(0, ear.r - dt / 260)
-
-        ctx.clearRect(0, 0, W, H)
-        const walk = S.walking ? Math.sin(S.t * 12) : 0
-        const breathe = S.walking ? 0 : Math.sin(S.t * 2.1) * 1.6
-        const bob = S.walking ? Math.abs(Math.sin(S.t * 12)) * -4 : 0
-
-        const shScale = Math.max(0.55, 1 + S.y / 240)
-        ell(170 + S.x, 166, 40 * shScale, 9 * shScale, 'rgba(120,80,40,0.30)', 'rgba(120,80,40,0)', 0.9)
-
-        const ox = 170 + S.x
-        const oy = 166 - S.y
-        const rz = (S.rz * Math.PI) / 180
-        const cosR = Math.cos(rz), sinR = Math.sin(rz)
-        function P(lx, ly, lz) {
-          const rx0 = lx * cosR - ly * sinR
-          const ry0 = lx * sinR + ly * cosR
-          const sc = 1 + lz * 0.0011
-          return { x: ox + rx0 * sc, y: oy - ry0 * sc, z: lz }
+    function loadSettings() {
+      const def = { remindersOn: true, waterMin: 45, moveMin: 30 }
+      try {
+        const raw = localStorage.getItem('dspet-settings')
+        if (raw) {
+          const d = JSON.parse(raw)
+          if (typeof d.remindersOn === 'boolean') def.remindersOn = d.remindersOn
+          const wm = Number(d.waterMin)
+          if (wm >= 5 && wm <= 180) def.waterMin = Math.round(wm)
+          const mm = Number(d.moveMin)
+          if (mm >= 5 && mm <= 180) def.moveMin = Math.round(mm)
         }
-
-        const parts = []
-        function push(z, fn) { parts.push({ z, fn }) }
-
-        const headYaw = ((S.ry + S.look.x * 30) * Math.PI) / 180
-        const headPitch = (S.look.y * 12 * Math.PI) / 180
-        const cy_ = Math.cos(headYaw), sy_ = Math.sin(headYaw)
-        function faceX(lx, lz) { return lx * cy_ - lz * sy_ }
-
-        const tw = Math.sin(S.t * 1.8) * 0.5 + Math.sin(S.t * 0.9) * 0.2
-        let tx = -32, ty = 26
-        for (let i = 0; i < 4; i++) {
-          const a = tw + i * 0.2
-          tx += Math.cos(a) * 9
-          ty += Math.sin(a) * 6 + i * 1.2
-          const p = P(tx, ty + 2, 4 - i)
-          const r = 7 - i * 1
-          push(2 - i, () => ell(p.x, p.y, r, r * 1.3, '#ffe9cc', '#f2c890'))
-        }
-
-        const bodyY = 34 + breathe * 0.6 + bob
-        const bx = S.sx, by = S.s * (S.closed ? 0.97 : 1)
-        push(10, () => ell(P(0, bodyY, 8).x, P(0, bodyY, 8).y, 34 * bx, 29 * by, '#fff3dd', '#f5cf9e'))
-        push(10.5, () => ell(P(0, bodyY - 5, 14).x, P(0, bodyY - 5, 14).y, 18 * bx, 13 * by, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'))
-
-        const pawUpL = S.mode === 'stretch' || S.mode === 'groom'
-        const swatR = S.mode === 'butterfly'
-        const plx = -17, prx = 17
-        const plY = 8 + (pawUpL ? Math.abs(Math.sin(S.t * 5)) * -15 : Math.max(0, Math.sin(S.t * 12 + 0.8)) * -2.4) + (S.mode === 'groom' ? -4 : 0)
-        const prY = 8 + (swatR ? -Math.abs(Math.sin(S.t * 9)) * 13 : Math.max(0, Math.sin(S.t * 12)) * -2.4)
-        push(9, () => ell(P(plx, plY, 12).x, P(plx, plY, 12).y, 14, 10, '#ffe9cc', '#f2c890'))
-        push(9, () => ell(P(prx, prY, 12).x, P(prx, prY, 12).y, 14, 10, '#ffe9cc', '#f2c890'))
-        push(9.1, () => ell(P(plx, plY + 5, 13).x, P(plx, plY + 5, 13).y, 6, 4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
-        push(9.1, () => ell(P(prx, prY + 5, 13).x, P(prx, prY + 5, 13).y, 6, 4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
-
-        const headY = 66 + breathe + bob * 0.6 + (S.mode === 'yawn' ? -3 : 0)
-        const hp = P(0, headY, 0)
-        const hr = 39
-        push(20, () => ell(hp.x, hp.y, hr, hr * 0.97, '#fff6e4', '#f7d5a5'))
-        push(20.4, () => ell(hp.x - hr * 0.28, hp.y - hr * 0.34, hr * 0.5, hr * 0.34, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'))
-
-        const eL = faceX(-16, 4), eR = faceX(16, 4)
-        const elx = hp.x + eL, erx = hp.x + eR
-        const eTop = hp.y - hr - 24
-        const ely = eTop - Math.sin(headPitch) * 18 + ear.l * -5
-        const ery = eTop - Math.sin(headPitch) * 18 + ear.r * -5
-        const ew = 25 * (0.6 + 0.4 * Math.cos(headYaw))
-        const eh = 27
-        push(20.5, () => tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'))
-        push(20.5, () => tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'))
-        push(20.1, () => tri(elx - ew * 0.55, ely + eh - 4, elx + ew * 0.55, ely + eh - 4, elx, ely + 7, '#ffb8cc', '#ff9db4'))
-        push(20.1, () => tri(erx - ew * 0.55, ery + eh - 4, erx + ew * 0.55, ery + eh - 4, erx, ery + 7, '#ffb8cc', '#ff9db4'))
-
-        push(22, () => ell(P(0, 44, 16).x, P(0, 44, 16).y, 24, 7, '#ff9dbe', '#ff6f9c'))
-        push(22.5, () => ell(P(0, 44, 18).x, P(0, 44, 18).y, 7, 5, '#ffc3d6', '#ff9dbe'))
-
-        push(21, () => {
-          const pitch = Math.sin(headPitch)
-          const eyeY0 = hp.y + 2 - pitch * 5
-          const eyeOpenL = S.happy || S.closed ? 1 : 1 - blink.l * 0.92
-          const eyeOpenR = S.happy || S.closed ? 1 : 1 - blink.r * 0.92
-          const exL = faceX(-14, 10), exR = faceX(14, 10)
-          const exl = hp.x + exL + S.look.x * 3, exr = hp.x + exR + S.look.x * 3
-          const ewl = 8 * (0.5 + 0.5 * Math.cos(headYaw)), ewr = ewl
-          const ehl = 10.5 * eyeOpenL, ehr = 10.5 * eyeOpenR
-          if (S.happy || S.closed) {
-            const arc = S.closed ? -1 : 1
-            ctx.strokeStyle = '#5b4636'
-            ctx.lineWidth = 2.6
-            ctx.lineCap = 'round'
-            ctx.beginPath()
-            ctx.arc(exl, eyeY0, 6.5, 0, Math.PI, arc > 0)
-            ctx.stroke()
-            ctx.beginPath()
-            ctx.arc(exr, eyeY0, 6.5, 0, Math.PI, arc > 0)
-            ctx.stroke()
-          } else {
-            ell(exl, eyeY0, ewl, ehl, '#3d2f24', '#2b211a')
-            ell(exr, eyeY0, ewl, ehr, '#3d2f24', '#2b211a')
-            ell(exl - ewl * 0.2, eyeY0 - ehl * 0.28, ewl * 0.5, ehl * 0.42, 'rgba(255,255,255,0.95)', 'rgba(255,255,255,0)')
-            ell(exr - ewl * 0.2, eyeY0 - ehl * 0.28, ewl * 0.5, ehl * 0.42, 'rgba(255,255,255,0.95)', 'rgba(255,255,255,0)')
-            ell(exl + ewl * 0.28, eyeY0 + ehl * 0.22, ewl * 0.24, ehl * 0.18, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)')
-            ell(exr + ewl * 0.28, eyeY0 + ehl * 0.22, ewl * 0.24, ehl * 0.18, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)')
-          }
-          const bxl = faceX(-26, 6), bxr = faceX(26, 6)
-          ell(hp.x + bxl, hp.y + 6, 8.5, 4.5, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
-          ell(hp.x + bxr, hp.y + 6, 8.5, 4.5, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
-          const nx = hp.x + faceX(0, 14)
-          ell(nx, hp.y + 13 - pitch * 4, 3.2, 2.6, '#ff9db4', '#ff7f9e')
-          const mx = hp.x + faceX(0, 14)
-          const my = hp.y + 18 - pitch * 5
-          if (S.mode === 'yawn') {
-            ell(mx, my + 2, 9, 8, '#7a4a35', '#5f3525')
-            ell(mx, my + 4.5, 5.5, 3.8, '#ff9db4', '#ff7f9e')
-          } else {
-            ctx.strokeStyle = '#5b4636'
-            ctx.lineWidth = 2
-            ctx.lineCap = 'round'
-            ctx.beginPath()
-            ctx.moveTo(mx - 3, my)
-            ctx.quadraticCurveTo(mx - 1.5, my + 1.8, mx, my + 0.8)
-            ctx.quadraticCurveTo(mx + 1.5, my + 1.8, mx + 3, my)
-            ctx.stroke()
-          }
-          ctx.strokeStyle = 'rgba(91,70,54,0.5)'
-          ctx.lineWidth = 1
-          const wx = hp.x + faceX(-28, 4), wy = hp.y + 4
-          ctx.beginPath(); ctx.moveTo(wx, wy - 5); ctx.quadraticCurveTo(wx - 15, wy - 6, wx - 20, wy - 9); ctx.stroke()
-          ctx.beginPath(); ctx.moveTo(wx, wy + 2); ctx.quadraticCurveTo(wx - 15, wy + 4, wx - 20, wy + 4); ctx.stroke()
-          const wx2 = hp.x + faceX(28, 4)
-          ctx.beginPath(); ctx.moveTo(wx2, wy - 5); ctx.quadraticCurveTo(wx2 + 15, wy - 6, wx2 + 20, wy - 9); ctx.stroke()
-          ctx.beginPath(); ctx.moveTo(wx2, wy + 2); ctx.quadraticCurveTo(wx2 + 15, wy + 4, wx2 + 20, wy + 4); ctx.stroke()
-          ctx.strokeStyle = 'rgba(200,150,110,0.45)'
-          ctx.lineWidth = 2.4
-          for (let i = 0; i < 3; i++) {
-            const sx = hp.x + faceX(-8 + i * 8, 2)
-            ctx.beginPath()
-            ctx.moveTo(sx, hp.y - 22 + pitch * 4)
-            ctx.quadraticCurveTo(sx + (i - 1) * 2, hp.y - 28, sx, hp.y - 31 + pitch * 2)
-            ctx.stroke()
-          }
-        })
-
-        parts.sort((a, b) => a.z - b.z)
-        for (const p of parts) p.fn()
-      }
-
-      return {
-        update(state) { Object.assign(S, state) },
-        frame: draw,
-      }
+      } catch (err) { /* ignore */ }
+      return def
     }
-
-    // ---------- shared store ----------
+    function saveSettings() {
+      try {
+        localStorage.setItem('dspet-settings', JSON.stringify({
+          remindersOn: state.remindersOn,
+          waterMin: state.waterMin,
+          moveMin: state.moveMin,
+        }))
+      } catch (err) { /* ignore */ }
+    }
+    function loadPos() {
+      try {
+        const p = JSON.parse(localStorage.getItem('dspet-pos'))
+        if (p && typeof p.x === 'number' && typeof p.y === 'number') return { x: p.x, y: p.y }
+      } catch (err) { /* ignore */ }
+      return null
+    }
+    function savePos() {
+      try {
+        if (state.pos) localStorage.setItem('dspet-pos', JSON.stringify(state.pos))
+        else localStorage.removeItem('dspet-pos')
+      } catch (err) { /* ignore */ }
+    }
+    const saved = loadSettings()
     const state = {
       visible: true,
-      remindersOn: true,
-      intervalMin: 45,
-      pos: null,
+      remindersOn: saved.remindersOn,
+      waterMin: saved.waterMin,
+      moveMin: saved.moveMin,
+      pos: loadPos(),
       busy: false,
-      nextKind: 0,
     }
     const listeners = new Set()
     function getState() { return state }
@@ -701,7 +833,6 @@ return {
       return value
     }
 
-    // ---------- cute lines ----------
     const CLICK_LINES = [
       '嘻嘻，找我玩呀？记得多喝水哦～',
       '喵呜～今天也要元气满满哦！',
@@ -711,8 +842,8 @@ return {
       '（蹭蹭你的手）',
     ]
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)] }
+    function clamp(v, min, max) { return Math.min(Math.max(v, min), max) }
 
-    // ---------- overlay ----------
     const h = React.createElement
 
     function Switch({ on, onChange }) {
@@ -727,7 +858,7 @@ return {
     function PetOverlay() {
       const visible = useStore((s) => s.visible)
       const pos = useStore((s) => s.pos)
-      const [pose, setPose] = React.useState({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, closed: false, happy: false, walking: false })
+      const [pose, setPose] = React.useState({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, z: 6, closed: false, happy: false, walking: false })
       const [look, setLook] = React.useState({ x: 0, y: 0 })
       const [mode, setMode] = React.useState('idle')
       const [bubble, setBubble] = React.useState(null)
@@ -741,36 +872,13 @@ return {
       const dragRef = React.useRef(null)
       const movedRef = React.useRef(false)
       const petRef = React.useRef(null)
-      const canvasRef = React.useRef(null)
-      const rendererRef = React.useRef(null)
-      const latestRef = React.useRef({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, closed: false, happy: false, walking: false, look: { x: 0, y: 0 }, mode: 'idle' })
-      latestRef.current = { ...pose, look, mode }
+      const lastActivityRef = React.useRef(Date.now())
+      const sleepingRef = React.useRef(false)
+      const animIdxRef = React.useRef(-1)
 
       React.useEffect(() => () => { mountedRef.current = false }, [])
 
-      // canvas renderer loop
-      React.useEffect(() => {
-        if (!canvasRef.current) return
-        const renderer = createCatRenderer(canvasRef.current)
-        rendererRef.current = renderer
-        let disposed = false
-        let raf = 0
-        const loop = () => {
-          if (disposed) return
-          renderer.update(latestRef.current)
-          renderer.frame()
-          raf = window.requestAnimationFrame(loop)
-        }
-        if (typeof window.requestAnimationFrame === 'function') {
-          raf = window.requestAnimationFrame(loop)
-        } else {
-          const id = ctx.interval(loop, 16)
-          return () => { disposed = true; id() }
-        }
-        return () => { disposed = true; window.cancelAnimationFrame(raf) }
-      }, [])
-
-      // welcome bubble on first mount
+      // 欢迎气泡
       React.useEffect(() => {
         const t = ctx.timeout(() => {
           if (!mountedRef.current) return
@@ -779,10 +887,11 @@ return {
         return t
       }, [])
 
-      // mouse look
+      // 鼠标追踪
       React.useEffect(() => {
         let decay = null
         const onMove = (e) => {
+          lastActivityRef.current = Date.now()
           const nx = (e.clientX / window.innerWidth) * 2 - 1
           const ny = (e.clientY / window.innerHeight) * 2 - 1
           if (mountedRef.current) setLook({ x: nx, y: ny })
@@ -845,10 +954,10 @@ return {
         setMode('peek')
         showBubble('喵？看见我了吗？', 6500)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
+          { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
           crouch(),
           ...wiggle(),
-          { set: { walking: true, x: -96, y: 0, s: 1 }, wait: 1150 },
+          { set: { walking: true, x: -96, z: 2, y: 0, s: 1 }, wait: 1150 },
           { set: { walking: false, ry: -10 }, wait: 300 },
           ...settle(),
           { set: { y: -26 }, wait: 850 },
@@ -856,51 +965,79 @@ return {
           { set: { y: -26, ry: 8 }, wait: 850 },
           { set: { y: 0, ry: 0 }, wait: 650 },
           crouch(),
-          { set: { walking: true, x: 0 }, wait: 1150 },
+          { set: { walking: true, x: 0, z: 6 }, wait: 1150 },
           { set: { walking: false } },
           ...settle(),
         ], () => setMode('idle'))
       }
       function startButterfly() {
         setMode('butterfly')
-        showBubble('蝴蝶别跑！看我的～扑！', 6200)
+        showBubble('蝴蝶别跑！看我的～扑！', 6500)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, ry: 6, y: 0, rz: 0, sx: 1, s: 1 }, wait: 1100 },
-          { set: { ry: -6 }, wait: 1100 },
-          { set: { ry: 6 }, wait: 1100 },
-          { set: { ry: -4 }, wait: 1100 },
-          { set: { ry: 0 }, wait: 800 },
+          { set: { closed: false, happy: false, walking: false, x: 0, z: 6, ry: 8, y: 0, rz: 0, sx: 1, s: 1 }, wait: 900 },
+          { set: { ry: -12 }, wait: 900 },
+          { set: { ry: 10 }, wait: 900 },
+          { set: { ry: -10, rz: 2 }, wait: 1100 },
+          { set: { ry: 12, rz: -2 }, wait: 1100 },
+          { set: { ry: -8, rz: 0 }, wait: 1100 },
+          { set: { ry: 10 }, wait: 1100 },
+          { set: { ry: 0 }, wait: 900 },
+          { set: { ry: -6 }, wait: 900 },
+          { set: { ry: 6 }, wait: 900 },
+          { set: { ry: 0, rz: 0 }, wait: 700 },
         ], () => setMode('idle'))
       }
       function startNap() {
         setMode('nap')
         showBubble('呼噜……', 6600)
         runSeq([
-          { set: { happy: false, walking: false, rz: -5, ry: 4, sx: 1, s: 0.97, closed: true }, wait: 3200 },
-          { set: { s: 0.98 }, wait: 2000 },
-          { set: { s: 0.97 }, wait: 1500 },
-          { set: { rz: 0, ry: 0, s: 1, closed: false } },
+          { set: { closed: false, happy: false, walking: false, x: -14, z: 6, rz: 0, ry: 0, sx: 1, s: 1, y: 0 }, wait: 160 },
+          { set: { y: 2, closed: true }, wait: 1000 },
+          { set: { y: 1 }, wait: 1500 },
+          { set: { y: 2 }, wait: 1500 },
+          { set: { y: 1 }, wait: 1500 },
+          { set: { x: 0, y: 0, closed: false } },
         ], () => setMode('idle'))
+      }
+      // 长时间无人互动 → 趴着睡 3 分钟，醒来伸懒腰
+      function startSleep() {
+        setMode('nap')
+        sleepingRef.current = true
+        runSeq([
+          { set: { closed: false, happy: false, walking: false, x: -14, z: 6, rz: 0, ry: 0, sx: 1, s: 1, y: 0 }, wait: 140 },
+          { set: { y: 2, closed: true }, wait: 1000 },
+          { set: { y: 1 }, wait: 900 },
+        ])
+        ctx.timeout(() => {
+          if (!mountedRef.current || !sleepingRef.current) return
+          sleepingRef.current = false
+          setMode('idle')
+          runSeq([
+            { set: { closed: false, s: 1, y: 0 }, wait: 380 },
+            { set: { sx: 1.12, s: 0.92, y: -2, ry: 4 }, wait: 700 },
+            { set: { sx: 1, s: 1, y: 0, ry: 0 }, wait: 480 },
+          ])
+        }, 180000)
       }
       function startGroom() {
         setMode('groom')
         showBubble('舔舔爪子…洗脸脸～', 6000)
         runSeq([
-          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 300 },
+          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 300 },
           { set: { ry: 10, rz: 4, y: -3 }, wait: 700 },
           { set: { ry: 4 }, wait: 350 },
           { set: { ry: 10 }, wait: 350 },
           { set: { ry: 4 }, wait: 350 },
           { set: { ry: 0, rz: 0, y: 0 }, wait: 300 },
           { set: { ry: -10, rz: -4, y: -3 }, wait: 700 },
-          { set: { ry: 0, rz: 0, happy: false } },
+          { set: { ry: 0, rz: 0, y: 0, happy: false } },
         ], () => setMode('idle'))
       }
       function startYawn() {
         setMode('yawn')
         showBubble('哈啊……', 5000)
         runSeq([
-          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 250 },
+          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
           { set: { ry: -12, rz: -3, y: -4 }, wait: 420 },
           { set: { ry: -18, rz: 0, y: -5 }, wait: 420 },
           { set: { ry: -12 }, wait: 520 },
@@ -912,19 +1049,19 @@ return {
         setMode('stretch')
         showBubble('伸个懒腰～起来走两步吧！', 6000)
         runSeq([
-          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 250 },
+          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
           { set: { sx: 1.14, s: 0.9, y: -2, ry: 6 }, wait: 1100 },
           { set: { sx: 1.1, s: 0.94, y: -1 }, wait: 700 },
           { set: { sx: 1.14, s: 0.9, y: -2 }, wait: 800 },
           { set: { sx: 1, s: 1.04, y: -8 }, wait: 500 },
-          { set: { sx: 1, s: 1, happy: false } },
+          { set: { sx: 1, s: 1, y: 0, happy: false } },
         ], () => setMode('idle'))
       }
       function startEyes() {
         setMode('eyes')
         showBubble('看看远方，让眼睛休息一下下吧～', 6000)
         runSeq([
-          { set: { closed: false, walking: false, rz: 0, sx: 1, s: 1, happy: true, ry: 10 }, wait: 1300 },
+          { set: { closed: false, walking: false, x: 0, z: 6, rz: 0, sx: 1, s: 1, happy: true, ry: 10, y: 0 }, wait: 1300 },
           { set: { ry: -8 }, wait: 1300 },
           { set: { ry: 8 }, wait: 1200 },
           { set: { ry: 0, happy: false } },
@@ -934,7 +1071,7 @@ return {
         setMode('relax')
         showBubble('…主人，我好喜欢你～', 4500)
         runSeq([
-          { set: { closed: false, walking: false, ry: 6, rz: -4, sx: 1, s: 1, happy: true }, wait: 900 },
+          { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 900 },
           { set: { happy: false, closed: true }, wait: 380 },
           { set: { closed: false, happy: true }, wait: 720 },
           { set: { ry: 3, rz: -2 }, wait: 700 },
@@ -945,16 +1082,16 @@ return {
         setMode('curious')
         showBubble('？那是什么呀…', 4200)
         runSeq([
-          { set: { closed: false, walking: false, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
+          { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
           { set: { ry: -6, rz: -10 }, wait: 900 },
-          { set: { ry: 0, rz: 0, happy: false } },
+          { set: { ry: 0, rz: 0, y: 0, happy: false } },
         ], () => setMode('idle'))
       }
       function startWater() {
         setMode('drink')
         showBubble('咕咚咕咚…好好喝呀！', 3400)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
+          { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0 }, wait: 200 },
           crouch(),
           ...wiggle(),
           { set: { walking: true, x: -34, y: 0, s: 1 }, wait: 1150 },
@@ -986,39 +1123,61 @@ return {
       function finishBusy(ms) {
         ctx.timeout(() => { if (mountedRef.current) setState({ busy: false }) }, ms)
       }
-      function fireReminder() {
-        const s = getState()
-        const kind = s.nextKind % 3
-        setState({ nextKind: s.nextKind + 1, busy: true })
+      function fireWater() {
+        setState({ busy: true })
         cancelSeq()
-        if (kind === 0) startWater()
-        else if (kind === 1) { startStretch(); finishBusy(7200) }
+        sleepingRef.current = false
+        startWater()
+      }
+      function fireMove() {
+        setState({ busy: true })
+        cancelSeq()
+        sleepingRef.current = false
+        // 久坐起来走走：轮流 伸懒腰 / 看远方
+        if (Math.random() < 0.7) { startStretch(); finishBusy(7200) }
         else { startEyes(); finishBusy(7200) }
       }
 
       React.useEffect(() => {
-        let nextAt = Date.now() + getState().intervalMin * 60000
-        let prevKey = getState().intervalMin + ':' + getState().remindersOn
+        let nextWaterAt = Date.now() + getState().waterMin * 60000
+        let nextMoveAt = Date.now() + getState().moveMin * 60000
+        let prevKey = getState().waterMin + ':' + getState().moveMin + ':' + getState().remindersOn
         const unsub = subscribe(() => {
-          const key = getState().intervalMin + ':' + getState().remindersOn
+          const key = getState().waterMin + ':' + getState().moveMin + ':' + getState().remindersOn
           if (key !== prevKey) {
             prevKey = key
-            nextAt = Date.now() + getState().intervalMin * 60000
+            nextWaterAt = Date.now() + getState().waterMin * 60000
+            nextMoveAt = Date.now() + getState().moveMin * 60000
           }
         })
         const dispose = ctx.interval(() => {
           const s = getState()
           if (!s.remindersOn || !s.visible) return
           const now = Date.now()
-          if (now >= nextAt) {
-            fireReminder()
-            nextAt = now + s.intervalMin * 60000
+          if (now >= nextWaterAt) {
+            fireWater()
+            nextWaterAt = now + s.waterMin * 60000
+          }
+          if (now >= nextMoveAt) {
+            fireMove()
+            nextMoveAt = now + s.moveMin * 60000
           }
         }, 1000)
         return () => { unsub(); dispose() }
       }, [])
 
-      // idle behavior loop
+      function playAnim(name) {
+        if (name === 'peek') startPeek()
+        else if (name === 'butterfly') startButterfly()
+        else if (name === 'nap') startNap()
+        else if (name === 'groom') startGroom()
+        else if (name === 'yawn') startYawn()
+        else if (name === 'curious') startCurious()
+        else startRelax()
+      }
+      const ANIM_NAMES = ['peek', 'butterfly', 'nap', 'groom', 'yawn', 'curious', 'relax']
+
+      // 待机行为循环
       React.useEffect(() => {
         let alive = true
         let outer = null
@@ -1027,15 +1186,13 @@ return {
             if (!alive) return
             const s = getState()
             if (s.visible && !s.busy && !bigRef.current) {
-              const names = ['peek', 'butterfly', 'nap', 'groom', 'yawn', 'curious', 'relax']
-              const name = names[Math.floor(Math.random() * names.length)]
-              if (name === 'peek') startPeek()
-              else if (name === 'butterfly') startButterfly()
-              else if (name === 'nap') startNap()
-              else if (name === 'groom') startGroom()
-              else if (name === 'yawn') startYawn()
-              else if (name === 'curious') startCurious()
-              else startRelax()
+              if (sleepingRef.current) {
+                // 睡觉中，不打扰
+              } else if (Date.now() - lastActivityRef.current > 150000) {
+                startSleep()
+              } else {
+                playAnim(ANIM_NAMES[Math.floor(Math.random() * ANIM_NAMES.length)])
+              }
               ctx.timeout(() => { if (alive) loop() }, 1000)
             } else loop()
           }, 20000)
@@ -1051,11 +1208,26 @@ return {
         }, '🐾 小猫咪回来')
       }
 
+      const catZStyle = {
+        transform: 'translateX(' + pose.x + 'px) translateY(' + pose.y + 'px) rotateY(' + (pose.ry * 0.5) + 'deg) rotate(' + pose.rz + 'deg) scale(' + pose.sx + ',' + pose.s + ')',
+        zIndex: pose.z,
+      }
       const shadowStyle = {
         left: (118 + pose.x) + 'px',
         transform: 'scale(' + Math.max(0.55, 1 + pose.y / 240) + ')',
         opacity: Math.max(0.22, 1 + pose.y / 90),
       }
+      const h3dStyle = {
+        transform: 'rotateY(' + (pose.ry + look.x * 26) + 'deg) rotateZ(' + (pose.rz * 0.5 + look.y * 4) + 'deg)' + (mode === 'nap' ? ' rotateX(-30deg) translateY(8px)' : ''),
+      }
+      const eyeShift = {
+        transform: 'translate(' + (look.x * 3).toFixed(1) + 'px,' + (look.y * 2).toFixed(1) + 'px)',
+      }
+      const eyeCls = 'dsp-cat-eye' + (pose.happy ? ' dsp-cat-eye--happy' : '') + (pose.closed ? ' dsp-cat-eye--closed' : '')
+      const walkCls = 'dsp-cat-walk' + (pose.walking ? ' dsp-cat-walk--on' : '')
+      const catCls = 'dsp-cat' + (mode === 'yawn' ? ' dsp-cat--yawn' : '') + (mode === 'butterfly' ? ' dsp-cat--hunt' : '') + (mode === 'nap' ? ' dsp-cat--sleep' : '')
+      const pawLCls = 'dsp-cat-paw dsp-cat-paw--l' + (mode === 'stretch' || mode === 'groom' ? ' dsp-cat-paw--up' : '')
+      const pawRCls = 'dsp-cat-paw dsp-cat-paw--r' + (mode === 'butterfly' ? ' dsp-cat-paw--swat' : '')
       const bubbleCls = 'dsp-bubble' + (bubbleFade ? ' dsp-bubble--fade' : '')
       const bfCls = 'dsp-butterflies' + (mode === 'butterfly' ? ' dsp-butterflies--on' : '')
       const napCls = 'dsp-napfx' + (mode === 'nap' ? ' dsp-napfx--on' : '')
@@ -1084,9 +1256,10 @@ return {
         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) movedRef.current = true
         const vw = window.innerWidth
         const vh = window.innerHeight
-        const x = Math.min(Math.max(8, d.baseLeft + dx), vw - 256)
-        const y = Math.min(Math.max(8, d.baseTop + dy), vh - 220)
+        const x = clamp(d.baseLeft + dx, 8, vw - 256)
+        const y = clamp(d.baseTop + dy, 8, vh - 220)
         setState({ pos: { x, y } })
+        savePos()
       }
       function onPointerUp(e) {
         const d = dragRef.current
@@ -1096,17 +1269,28 @@ return {
       }
       function onClick(e) {
         if (movedRef.current) return
+        lastActivityRef.current = Date.now()
+        sleepingRef.current = false
         cancelSeq()
         setMode('idle')
         setHearts((n) => n + 1)
         showBubble(pick(CLICK_LINES), 6000)
         runSeq([
-          { set: { closed: false, walking: false, sx: 1, happy: true, ry: -8, rz: 0, s: 1.04, y: -6 }, wait: 620 },
+          { set: { closed: false, walking: false, x: 0, z: 6, sx: 1, happy: true, ry: -8, rz: 0, s: 1.04, y: -6 }, wait: 620 },
           { set: { ry: 8, y: 0 }, wait: 520 },
           { set: { ry: 0, s: 1 } },
         ])
       }
       function stopDown(e) { e.stopPropagation() }
+      // 点击花瓶 → 依次切换动画循环
+      function vaseClick(e) {
+        e.stopPropagation()
+        lastActivityRef.current = Date.now()
+        sleepingRef.current = false
+        cancelSeq()
+        animIdxRef.current = (animIdxRef.current + 1) % ANIM_NAMES.length
+        playAnim(ANIM_NAMES[animIdxRef.current])
+      }
 
       return h('div', {
         className: 'dspet',
@@ -1120,13 +1304,13 @@ return {
       },
         !bigPhase && bubble ? h('div', { key: bubble, className: bubbleCls }, bubble) : null,
         hearts > 0
-          ? h('div', { key: hearts, className: 'dsp-hearts' },
+          ? h('div', { key: hearts, className: 'dsp-hearts dsp-hearts--go' },
               h('span', null, '💖'), h('span', null, '✨'), h('span', null, '💕'))
           : null,
         h('div', { className: 'dsp-close', onPointerDown: stopDown, onClick: (e) => { e.stopPropagation(); setState({ visible: false }) } }, '×'),
         h('div', { className: 'dsp-scene' },
           h('div', { className: 'dsp-shadow', style: shadowStyle }),
-          h('div', { className: 'dsp-vase' },
+          h('div', { className: 'dsp-vase', onClick: vaseClick },
             h('div', { className: 'dsp-flower dsp-flower--f1' },
               h('div', { className: 'dsp-flower-stem' }),
               h('div', { className: 'dsp-flower-head' }),
@@ -1157,7 +1341,37 @@ return {
             h('div', { className: 'dsp-snot' }),
             h('div', { className: 'dsp-dream' }, '🍗 梦见大餐…'),
           ),
-          h('canvas', { className: 'dsp-canvas', ref: canvasRef }),
+          h('div', { className: 'dsp-cat-z', style: catZStyle },
+            h('div', { className: walkCls },
+              h('div', { className: catCls },
+                h('div', { className: 'dsp-cat-tail' }),
+                h('div', { className: 'dsp-h3d', style: h3dStyle },
+                  h('div', { className: 'dsp-h3d-b' }),
+                  h('div', { className: 'dsp-cat-ear dsp-cat-ear--l' }),
+                  h('div', { className: 'dsp-cat-ear dsp-cat-ear--r' }),
+                  h('div', { className: 'dsp-h3d-f' },
+                    h('div', { className: 'dsp-cat-face' },
+                      h('div', { className: 'dsp-eye-pos dsp-eye-pos--l', style: eyeShift }, h('div', { className: eyeCls })),
+                      h('div', { className: 'dsp-eye-pos dsp-eye-pos--r', style: eyeShift }, h('div', { className: eyeCls })),
+                      h('div', { className: 'dsp-cat-nose' }),
+                      h('div', { className: 'dsp-cat-blush dsp-cat-blush--l' }),
+                      h('div', { className: 'dsp-cat-blush dsp-cat-blush--r' }),
+                      h('div', { className: 'dsp-cat-yawn' }),
+                      h('div', { className: 'dsp-cat-mouth' }),
+                      h('div', { className: 'dsp-whisker dsp-whisker--l1' }),
+                      h('div', { className: 'dsp-whisker dsp-whisker--l2' }),
+                      h('div', { className: 'dsp-whisker dsp-whisker--r1' }),
+                      h('div', { className: 'dsp-whisker dsp-whisker--r2' }),
+                    ),
+                  ),
+                ),
+                h('div', { className: 'dsp-cat-body' }),
+                h('div', { className: 'dsp-cat-scarf' }),
+                h('div', { className: pawLCls }),
+                h('div', { className: pawRCls }),
+              ),
+            ),
+          ),
         ),
         bigPhase
           ? h('div', { className: 'dsp-big' + (bigPhase === 'out' ? ' dsp-big--out' : '') },
@@ -1188,26 +1402,67 @@ return {
 
     function PetSettings() {
       const remindersOn = useStore((s) => s.remindersOn)
-      const intervalMin = useStore((s) => s.intervalMin)
+      const waterMin = useStore((s) => s.waterMin)
+      const moveMin = useStore((s) => s.moveMin)
       const visible = useStore((s) => s.visible)
+      function setIntervalMin(target, v) {
+        const n = Math.min(Math.max(Math.round(v) || (target === 'water' ? 45 : 30), 5), 180)
+        setState(target === 'water' ? { waterMin: n } : { moveMin: n })
+        saveSettings()
+      }
+      function chipCls(target, v) {
+        return 'dsp-chip' + ((target === 'water' ? waterMin : moveMin) === v ? ' dsp-chip--on' : '')
+      }
+      function chip(target, v) {
+        return h('button', {
+          key: target + v,
+          type: 'button',
+          className: chipCls(target, v),
+          onClick: () => setIntervalMin(target, v),
+        }, v + '分')
+      }
       return h('div', { className: 'dsp-settings' },
-        h('p', { className: 'dsp-settings-desc' }, 'Canvas 3D 软渲染的猫咪：真实光影 + 3D 头部转向 + 弹性动作，跟着鼠标转头、不对称眨眼、舔毛、打哈欠、歪头好奇，到点变身巨猫敲屏提醒你喝水～（纯文字卖萌✨）'),
+        h('p', { className: 'dsp-settings-desc' }, 'HTML+CSS 3D 真猫版：CSS 过渡驱动动作，会转头看你、不对称眨眼、舔毛、打哈欠、歪头好奇，蝴蝶从屏幕外飞进来绕花绕猫逗它玩，猫咪会跳起来扑蝴蝶；鼠标长时间不动就趴着睡觉打呼噜～设置自动保存，到点变身巨猫敲屏提醒你喝水（纯文字卖萌✨）'),
         h('div', { className: 'dsp-settings-row' },
           h('span', { className: 'dsp-settings-label' }, '喝水 / 活动提醒'),
-          h(Switch, { on: remindersOn, onChange: (v) => setState({ remindersOn: v }) }),
+          h(Switch, { on: remindersOn, onChange: (v) => { setState({ remindersOn: v }); saveSettings() } }),
         ),
         h('div', { className: 'dsp-settings-row' },
-          h('span', { className: 'dsp-settings-label' }, '提醒间隔'),
-          h('select', {
-            className: 'dsp-select',
-            value: String(intervalMin),
-            onChange: (e) => setState({ intervalMin: Number(e.target.value) }),
-          },
-            [30, 45, 60, 90].map((m) => h('option', { key: m, value: String(m) }, m + ' 分钟')),
+          h('span', { className: 'dsp-settings-label' }, '喝水间隔'),
+          h('span', { className: 'dsp-settings-inline' },
+            h('input', {
+              key: 'w' + waterMin,
+              className: 'dsp-num',
+              type: 'number', min: 5, max: 180, step: 1,
+              defaultValue: String(waterMin),
+              onBlur: (e) => setIntervalMin('water', Number(e.target.value)),
+              onKeyDown: (e) => { if (e.key === 'Enter') e.target.blur() },
+            }),
+            h('span', { className: 'dsp-unit' }, '分钟'),
           ),
         ),
+        h('div', { className: 'dsp-settings-row dsp-settings-row--chips' },
+          [30, 45, 60, 90].map((m) => chip('water', m)),
+        ),
+        h('div', { className: 'dsp-settings-row' },
+          h('span', { className: 'dsp-settings-label' }, '久坐走走间隔'),
+          h('span', { className: 'dsp-settings-inline' },
+            h('input', {
+              key: 'm' + moveMin,
+              className: 'dsp-num',
+              type: 'number', min: 5, max: 180, step: 1,
+              defaultValue: String(moveMin),
+              onBlur: (e) => setIntervalMin('move', Number(e.target.value)),
+              onKeyDown: (e) => { if (e.key === 'Enter') e.target.blur() },
+            }),
+            h('span', { className: 'dsp-unit' }, '分钟'),
+          ),
+        ),
+        h('div', { className: 'dsp-settings-row dsp-settings-row--chips' },
+          [30, 45, 60, 90].map((m) => chip('move', m)),
+        ),
         h('div', { className: 'dsp-settings-row dsp-settings-row--actions' },
-          h('button', { className: 'dsp-btn', onClick: () => setState({ pos: null }) }, '↩ 重置位置'),
+          h('button', { className: 'dsp-btn', onClick: () => { setState({ pos: null }); savePos() } }, '↩ 重置位置'),
           h('button', { className: 'dsp-btn', onClick: () => setState({ visible: !visible }) }, visible ? '🙈 藏起来' : '🐾 召唤出来'),
         ),
       )

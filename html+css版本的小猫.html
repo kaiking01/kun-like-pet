@@ -118,54 +118,71 @@ body {
 }
 .dsp-butterflies--on { opacity: 1; }
 .dsp-bfly { position: absolute; font-size: 20px; }
-.dsp-bfly--1 { left: 6px; top: 58px; animation: dsp-fly1 7s ease-in-out infinite; }
-.dsp-bfly--2 { left: 78px; top: 26px; animation: dsp-fly2 8.6s ease-in-out infinite; }
-.dsp-bfly--3 { left: 32px; top: 82px; animation: dsp-fly3 6.2s ease-in-out infinite; }
+.dsp-bfly--1 { left: 300px; top: 90px; animation: dsp-fly1 11s ease-in-out infinite; }
+.dsp-bfly--2 { left: -60px; top: 60px; animation: dsp-fly2 13s ease-in-out infinite; }
+.dsp-bfly--3 { left: -60px; top: 150px; animation: dsp-fly3 12s ease-in-out infinite; }
 .dsp-bfly-wing {
   display: inline-block;
   animation: dsp-flap3d 0.32s ease-in-out infinite;
 }
-.dsp-bfly--2 .dsp-bfly-wing { animation-duration: 0.24s; }
-.dsp-bfly--3 .dsp-bfly-wing { animation-duration: 0.4s; }
+.dsp-bfly--2 .dsp-bfly-wing { animation-duration: 0.26s; }
+.dsp-bfly--3 .dsp-bfly-wing { animation-duration: 0.38s; }
 @keyframes dsp-flap3d {
   0%, 100% { transform: perspective(400px) rotateY(0deg); }
   50% { transform: perspective(400px) rotateY(78deg); }
 }
-/* 飞行1：花丛右侧悬停 → 急窜右上（banking）→ 悬停 → 急窜左上远处 → 回花丛 */
+/* 绕花一圈：右外飞入 → 花丛正上方一圈（banking 倾斜 + 远近缩放）→ 左外飞出 */
 @keyframes dsp-fly1 {
-  0%, 12% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  24% { transform: translate3d(52px, -30px, 24px) rotateZ(-16deg) scale(1.14); }
-  30% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
-  44% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
-  56% { transform: translate3d(6px, -72px, -24px) rotateZ(12deg) scale(0.9); }
-  62% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
-  76% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
-  88% { transform: translate3d(-24px, -46px, 14px) rotateZ(18deg) scale(1.08); }
-  94% { transform: translate3d(-14px, -48px, 14px) rotateZ(-10deg) scale(1.08); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  8% { transform: translate3d(-120px, -20px, 10px) rotateZ(10deg) scale(1.05); }
+  14% { transform: translate3d(-215px, 18px, 16px) rotateZ(-12deg) scale(1.1); }
+  20% { transform: translate3d(-248px, 30px, 18px) rotateZ(-18deg) scale(1.12); }
+  26% { transform: translate3d(-262px, 8px, 12px) rotateZ(8deg) scale(1.06); }
+  32% { transform: translate3d(-246px, -20px, 4px) rotateZ(16deg) scale(1); }
+  38% { transform: translate3d(-222px, -40px, -6px) rotateZ(14deg) scale(0.95); }
+  44% { transform: translate3d(-200px, -32px, -10px) rotateZ(-8deg) scale(0.92); }
+  50% { transform: translate3d(-196px, -4px, -2px) rotateZ(-14deg) scale(0.96); }
+  56% { transform: translate3d(-216px, 20px, 12px) rotateZ(8deg) scale(1.05); }
+  64% { transform: translate3d(-262px, 4px, 18px) rotateZ(-14deg) scale(1.1); }
+  72% { transform: translate3d(-320px, -50px, 22px) rotateZ(12deg) scale(1.14); }
+  84%, 100% { transform: translate3d(-350px, -40px, 22px) rotateZ(0deg) scale(1.1); }
 }
-/* 飞行2：高处悬停 → 俯冲左下 → 盘旋回花丛上方 */
+/* 绕猫逗玩：左外飞入 → 绕猫头转一整圈 → 再绕半圈逗它 → 右外飞出 */
 @keyframes dsp-fly2 {
-  0%, 10% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  22% { transform: translate3d(-54px, 14px, -18px) rotateZ(14deg) scale(0.92); }
-  28% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
-  40% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
-  52% { transform: translate3d(-8px, -40px, 22px) rotateZ(-16deg) scale(1.12); }
-  58% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
-  72% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
-  84% { transform: translate3d(40px, -10px, -12px) rotateZ(-14deg) scale(0.94); }
-  92% { transform: translate3d(30px, -12px, -12px) rotateZ(10deg) scale(0.94); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  7% { transform: translate3d(130px, 58px, 10px) rotateZ(-10deg) scale(1.06); }
+  13% { transform: translate3d(196px, 76px, 16px) rotateZ(10deg) scale(1.1); }
+  19% { transform: translate3d(216px, 92px, 18px) rotateZ(-14deg) scale(1.12); }
+  25% { transform: translate3d(228px, 74px, 12px) rotateZ(8deg) scale(1.06); }
+  31% { transform: translate3d(222px, 52px, 4px) rotateZ(16deg) scale(1); }
+  37% { transform: translate3d(202px, 38px, -6px) rotateZ(14deg) scale(0.94); }
+  43% { transform: translate3d(182px, 48px, -10px) rotateZ(-8deg) scale(0.9); }
+  49% { transform: translate3d(174px, 66px, -2px) rotateZ(-14deg) scale(0.96); }
+  55% { transform: translate3d(186px, 84px, 10px) rotateZ(8deg) scale(1.04); }
+  61% { transform: translate3d(208px, 90px, 16px) rotateZ(-10deg) scale(1.1); }
+  67% { transform: translate3d(230px, 72px, 12px) rotateZ(14deg) scale(1.08); }
+  73% { transform: translate3d(200px, 40px, 6px) rotateZ(-16deg) scale(1.04); }
+  79% { transform: translate3d(236px, 50px, 16px) rotateZ(10deg) scale(1.1); }
+  86% { transform: translate3d(300px, 20px, 20px) rotateZ(-12deg) scale(1.14); }
+  94%, 100% { transform: translate3d(330px, 30px, 20px) rotateZ(0deg) scale(1.1); }
 }
-/* 飞行3：花间小范围徘徊 + 小绕圈 */
+/* 串场：左下外飞入 → 绕花半圈 → 绕猫半圈 + 逗一下 → 左上外飞出 */
 @keyframes dsp-fly3 {
-  0%, 8% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
-  16% { transform: translate3d(24px, -20px, 10px) rotateZ(-10deg) scale(1.08); }
-  24% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
-  36% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
-  46% { transform: translate3d(-14px, -48px, 6px) rotateZ(12deg) scale(1.02); }
-  54% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
-  66% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
-  78% { transform: translate3d(-34px, -18px, -10px) rotateZ(14deg) scale(0.94); }
-  88% { transform: translate3d(-16px, -22px, -10px) rotateZ(-10deg) scale(0.94); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  8% { transform: translate3d(85px, -62px, 8px) rotateZ(12deg) scale(1.05); }
+  14% { transform: translate3d(102px, -58px, 14px) rotateZ(-10deg) scale(1.1); }
+  20% { transform: translate3d(120px, -36px, 18px) rotateZ(-16deg) scale(1.12); }
+  26% { transform: translate3d(106px, -14px, 14px) rotateZ(10deg) scale(1.06); }
+  32% { transform: translate3d(78px, -30px, 6px) rotateZ(16deg) scale(1); }
+  40% { transform: translate3d(142px, -52px, 12px) rotateZ(-12deg) scale(1.06); }
+  46% { transform: translate3d(190px, -34px, 16px) rotateZ(10deg) scale(1.1); }
+  52% { transform: translate3d(222px, -24px, 18px) rotateZ(-14deg) scale(1.12); }
+  58% { transform: translate3d(224px, -46px, 12px) rotateZ(8deg) scale(1.06); }
+  64% { transform: translate3d(200px, -60px, 2px) rotateZ(16deg) scale(0.98); }
+  70% { transform: translate3d(182px, -68px, 10px) rotateZ(-10deg) scale(1.05); }
+  78% { transform: translate3d(230px, -60px, 18px) rotateZ(12deg) scale(1.12); }
+  86% { transform: translate3d(150px, -130px, 22px) rotateZ(-14deg) scale(1.14); }
+  94%, 100% { transform: translate3d(-30px, -150px, 22px) rotateZ(0deg) scale(1.1); }
 }
 
 /* ================= 猫咪 ================= */
@@ -178,6 +195,68 @@ body {
   position: absolute; inset: 0;
   transform: translateZ(30px);
   transform-style: preserve-3d;
+}
+/* 趴睡：整体下移贴地、身体单独压扁 + 肚子呼吸起伏、头从脖子前倾埋爪、前爪前伸、尾巴安静 */
+.dsp-cat--sleep {
+  transform: translateZ(30px) translateY(10px);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat--sleep .dsp-h3d {
+  transform-origin: 50% 100%;
+}
+.dsp-cat--sleep .dsp-cat-body {
+  transform: translateZ(6px) translateY(8px) scale(1.22, 0.58);
+  animation: dsp-sleepbreathe 3.4s ease-in-out infinite;
+}
+.dsp-cat--sleep .dsp-cat-tail {
+  animation: none;
+  transform: rotate(2deg);
+}
+.dsp-cat--sleep .dsp-cat-paw--l {
+  transform: translate(7px, -3px) rotate(12deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dsp-cat--sleep .dsp-cat-paw--r {
+  transform: translate(-7px, -3px) rotate(-12deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes dsp-sleepbreathe {
+  0%, 100% { transform: translateZ(6px) translateY(8px) scale(1.22, 0.58); }
+  50% { transform: translateZ(6px) translateY(7px) scale(1.24, 0.62); }
+}
+/* 捕蝴蝶（狩猎模式）：蓄力 → 前倾扑击 → 扑空落地 → 回弹；尾巴激动甩、耳朵竖起、眼睛瞪大 */
+.dsp-cat--hunt {
+  animation: dsp-pounce 1.9s cubic-bezier(0.34, 1.3, 0.64, 1) infinite;
+}
+.dsp-cat--hunt .dsp-cat-tail {
+  animation: dsp-tailexcite 0.6s ease-in-out infinite;
+}
+.dsp-cat--hunt .dsp-cat-ear--l,
+.dsp-cat--hunt .dsp-cat-ear--r {
+  animation: dsp-earalert 1.6s ease-in-out infinite;
+}
+.dsp-cat--hunt .dsp-cat-ear--r { animation-delay: 0.4s; }
+.dsp-cat--hunt .dsp-cat-eye {
+  animation: none !important;
+  transform: scale(1.12);
+}
+@keyframes dsp-pounce {
+  0%, 100% { transform: translateZ(30px) translateY(0) scale(1, 1) rotateX(0deg); }
+  12% { transform: translateZ(30px) translateY(3px) scale(0.94, 0.9) rotateX(0deg); }
+  22% { transform: translateZ(30px) translateY(2px) scale(0.9, 0.86) rotateX(2deg); }
+  36% { transform: translateZ(30px) translateY(-31px) scale(1.1, 0.88) rotateX(-14deg); }
+  50% { transform: translateZ(30px) translateY(-15px) scale(1.02, 1) rotateX(-6deg); }
+  62% { transform: translateZ(30px) translateY(6px) scale(1.18, 0.82) rotateX(5deg); }
+  76% { transform: translateZ(30px) translateY(-4px) scale(1.05, 0.95) rotateX(0deg); }
+  89% { transform: translateZ(30px) translateY(1px) scale(0.95, 1.02) rotateX(0deg); }
+}
+@keyframes dsp-tailexcite {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(18deg); }
+}
+@keyframes dsp-earalert {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
 }
 .dsp-cat-walk {
   position: absolute; inset: 0;
@@ -295,7 +374,7 @@ body {
 }
 .dsp-cat-eye--closed::after { display: none; }
 .dsp-cat-nose {
-  position: absolute; left: 50%; top: 22px; margin-left: -4px;
+  position: absolute; left: 50%; top: 26px; margin-left: -4px;
   width: 8px; height: 6px;
   background: #ff9db4; border-radius: 4px 4px 6px 6px;
   animation: dsp-sniff 5.2s ease-in-out infinite;
@@ -309,10 +388,10 @@ body {
   position: absolute; top: 30px; width: 14px; height: 8px;
   background: rgba(255, 138, 158, 0.75); border-radius: 50%;
 }
-.dsp-cat-blush--l { left: 6px; }
-.dsp-cat-blush--r { right: 6px; }
+.dsp-cat-blush--l { left: 14px; }
+.dsp-cat-blush--r { right: 12px; }
 .dsp-cat-mouth {
-  position: absolute; left: 50%; top: 32px; margin-left: -6px;
+  position: absolute; left: 50%; top: 36px; margin-left: -6px;
   width: 12px; height: 7px;
   border-bottom: 2.5px solid #5b4636; border-radius: 0 0 12px 12px;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -408,16 +487,16 @@ body {
   position: absolute; font-size: 16px; font-weight: 700; color: #8fb8e8;
   animation: dsp-zz 2.6s ease-in-out infinite; opacity: 0;
 }
-.dsp-zzz span:nth-child(1) { left: 138px; top: 34px; }
-.dsp-zzz span:nth-child(2) { left: 156px; top: 22px; animation-delay: 0.8s; }
-.dsp-zzz span:nth-child(3) { left: 174px; top: 10px; animation-delay: 1.6s; }
+.dsp-zzz span:nth-child(1) { left: 138px; top: 96px; }
+.dsp-zzz span:nth-child(2) { left: 156px; top: 84px; animation-delay: 0.8s; }
+.dsp-zzz span:nth-child(3) { left: 174px; top: 72px; animation-delay: 1.6s; }
 @keyframes dsp-zz {
   0% { transform: translateY(10px) scale(0.6); opacity: 0; }
   30% { opacity: 1; }
   100% { transform: translateY(-26px) scale(1.15); opacity: 0; }
 }
 .dsp-snot {
-  position: absolute; left: 148px; top: 98px; width: 12px; height: 12px;
+  position: absolute; left: 148px; top: 112px; width: 12px; height: 12px;
   background: rgba(170, 215, 250, 0.9);
   border: 1.5px solid rgba(120, 170, 220, 0.6);
   border-radius: 50%;
@@ -431,7 +510,7 @@ body {
   100% { transform: scale(2.1); opacity: 0; }
 }
 .dsp-dream {
-  position: absolute; left: 118px; top: 58px;
+  position: absolute; left: 104px; top: 66px;
   padding: 6px 10px; background: #fff;
   border: 2px solid rgba(214, 164, 112, 0.4); border-radius: 14px;
   font-size: 13px; color: #8a5a3a; white-space: nowrap;
@@ -671,6 +750,36 @@ body {
   border: 1px solid rgba(127, 127, 127, 0.3);
   background: #fff; color: #6b4a33;
 }
+.dsp-settings-inline { display: flex; align-items: center; gap: 4px; }
+.dsp-num {
+  width: 62px; padding: 3px 6px; font-size: 13px; border-radius: 8px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  background: #fff; color: #6b4a33;
+}
+.dsp-unit { font-size: 12px; opacity: 0.7; }
+.dsp-settings-row--chips { justify-content: flex-start; gap: 6px; flex-wrap: wrap; padding-top: 2px; }
+.dsp-chip {
+  padding: 3px 10px; font-size: 12px; border-radius: 999px;
+  border: 1px solid rgba(214, 164, 112, 0.45);
+  background: transparent; color: #8a5a3a; cursor: pointer;
+}
+.dsp-chip:hover { background: rgba(214, 164, 112, 0.12); }
+.dsp-chip--on { background: #ff7ea8; border-color: #ff7ea8; color: #fff; }
+/* ================= Electron 桌面版适配 ================= */
+html.dsp-electron, html.dsp-electron body {
+  background: transparent !important;
+  overflow: hidden;
+}
+html.dsp-electron .page-hint { display: none; }
+html.dsp-electron .dspet {
+  right: auto; bottom: auto; left: 0; top: 0;
+  width: 100%; height: 100%;
+}
+html.dsp-electron .dsp-scene {
+  left: 50%; bottom: 50%; margin-left: -120px; margin-bottom: -100px;
+}
+html.dsp-electron .dsp-close, html.dsp-electron .dsp-gear { z-index: 80; }
+html.dsp-electron .dsp-settings-panel { top: 8px; right: 8px; bottom: auto; }
 .dsp-switch {
   position: relative; width: 42px; height: 22px; padding: 0;
   border-radius: 999px; border: 1px solid rgba(127, 127, 127, 0.35);
@@ -783,19 +892,36 @@ body {
 <!-- 设置面板 -->
 <div id="settingsPanel" class="dsp-settings-panel">
   <p class="dsp-settings-title">🐱 桌宠设置</p>
-  <p class="dsp-settings-desc">真猫习性的 3D 猫咪：会跟着你的鼠标转头、不对称眨眼、舔毛、打哈欠、歪头好奇，到点变身巨猫敲屏提醒你喝水～</p>
+  <p class="dsp-settings-desc">真猫习性的 3D 猫咪：会跟着你的鼠标转头、不对称眨眼、舔毛、打哈欠、歪头好奇，蝴蝶从屏幕外飞进来绕花绕猫逗它玩，猫咪会跳起来扑蝴蝶；鼠标长时间不动就趴着睡觉打呼噜～到点变身巨猫敲屏提醒你喝水～</p>
   <div class="dsp-settings-row">
     <span>喝水 / 活动提醒</span>
     <button id="remindSwitch" type="button" class="dsp-switch dsp-switch--on" aria-pressed="true"><span class="dsp-switch-knob"></span></button>
   </div>
   <div class="dsp-settings-row">
-    <span>提醒间隔</span>
-    <select id="intervalSelect" class="dsp-select">
-      <option value="30">30 分钟</option>
-      <option value="45" selected>45 分钟</option>
-      <option value="60">60 分钟</option>
-      <option value="90">90 分钟</option>
-    </select>
+    <span>喝水间隔</span>
+    <span class="dsp-settings-inline">
+      <input id="waterInput" type="number" min="5" max="180" step="1" class="dsp-num">
+      <span class="dsp-unit">分钟</span>
+    </span>
+  </div>
+  <div class="dsp-settings-row dsp-settings-row--chips">
+    <button class="dsp-chip" data-min="30" data-target="water">30分</button>
+    <button class="dsp-chip" data-min="45" data-target="water">45分</button>
+    <button class="dsp-chip" data-min="60" data-target="water">60分</button>
+    <button class="dsp-chip" data-min="90" data-target="water">90分</button>
+  </div>
+  <div class="dsp-settings-row">
+    <span>久坐走走间隔</span>
+    <span class="dsp-settings-inline">
+      <input id="moveInput" type="number" min="5" max="180" step="1" class="dsp-num">
+      <span class="dsp-unit">分钟</span>
+    </span>
+  </div>
+  <div class="dsp-settings-row dsp-settings-row--chips">
+    <button class="dsp-chip" data-min="30" data-target="move">30分</button>
+    <button class="dsp-chip" data-min="45" data-target="move">45分</button>
+    <button class="dsp-chip" data-min="60" data-target="move">60分</button>
+    <button class="dsp-chip" data-min="90" data-target="move">90分</button>
   </div>
   <div class="dsp-settings-row dsp-settings-row--actions">
     <button id="resetPosBtn" class="dsp-btn">↩ 重置位置</button>
@@ -827,12 +953,57 @@ body {
   var eyes = pet.querySelectorAll('.dsp-cat-eye');
   var settingsPanel = document.getElementById('settingsPanel');
   var remindSwitch = document.getElementById('remindSwitch');
-  var intervalSelect = document.getElementById('intervalSelect');
+  var waterInput = document.getElementById('waterInput');
+  var moveInput = document.getElementById('moveInput');
   var closeBtn = document.getElementById('closeBtn');
   var gearBtn = document.getElementById('gearBtn');
 
+  // ============ 持久化（localStorage 永久存储） ============
+  function loadSettings() {
+    var def = { remindersOn: true, waterMin: 45, moveMin: 30 };
+    try {
+      var raw = localStorage.getItem('dspet-settings');
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (typeof d.remindersOn === 'boolean') def.remindersOn = d.remindersOn;
+        var wm = Number(d.waterMin);
+        if (wm >= 5 && wm <= 180) def.waterMin = Math.round(wm);
+        var mm = Number(d.moveMin);
+        if (mm >= 5 && mm <= 180) def.moveMin = Math.round(mm);
+      }
+    } catch (err) { /* ignore */ }
+    return def;
+  }
+  function saveSettings() {
+    try {
+      localStorage.setItem('dspet-settings', JSON.stringify({
+        remindersOn: state.remindersOn,
+        waterMin: state.waterMin,
+        moveMin: state.moveMin,
+      }));
+    } catch (err) { /* ignore */ }
+  }
+  function savePos() {
+    try {
+      var l = pet.style.left, t = pet.style.top;
+      if (l && t) localStorage.setItem('dspet-pos', JSON.stringify({ x: parseInt(l, 10), y: parseInt(t, 10) }));
+      else localStorage.removeItem('dspet-pos');
+    } catch (err) { /* ignore */ }
+  }
+
+  // ============ Electron 桌面版 ============
+  var isElectron = navigator.userAgent.indexOf('Electron') !== -1;
+  var winAPI = (typeof window !== 'undefined' && window.petAPI) ? window.petAPI : null;
+  if (isElectron) document.documentElement.classList.add('dsp-electron');
+  if (isElectron && winAPI && winAPI.onOpenSettings) {
+    winAPI.onOpenSettings(function () {
+      settingsPanel.classList.add('dsp-settings-panel--show');
+    });
+  }
+
   // ============ 状态 ============
-  var state = { visible: true, remindersOn: true, intervalMin: 45 };
+  var saved = loadSettings();
+  var state = { visible: true, remindersOn: saved.remindersOn, waterMin: saved.waterMin, moveMin: saved.moveMin };
   var pose = { x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, z: 6, closed: false, happy: false, walking: false };
   var look = { x: 0, y: 0 };
   var mode = 'idle';
@@ -841,6 +1012,8 @@ body {
   var bubbleTimer = null;
   var bigTimer = null;
   var lookTimer = null;
+  var lastActivity = Date.now();
+  var sleeping = false;
 
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
@@ -857,7 +1030,7 @@ body {
     shadow.style.transform = 'scale(' + Math.max(0.55, 1 + pose.y / 240) + ')';
     shadow.style.opacity = String(Math.max(0.22, 1 + pose.y / 90));
     catWalk.classList.toggle('dsp-cat-walk--on', pose.walking);
-    h3d.style.transform = 'rotateY(' + (pose.ry + look.x * 26) + 'deg) rotateZ(' + (pose.rz * 0.5 + look.y * 4) + 'deg)';
+    h3d.style.transform = 'rotateY(' + (pose.ry + look.x * 26) + 'deg) rotateZ(' + (pose.rz * 0.5 + look.y * 4) + 'deg)' + (mode === 'nap' ? ' rotateX(-30deg) translateY(8px)' : '');
     var ey = 'translate(' + (look.x * 3).toFixed(1) + 'px,' + (look.y * 2).toFixed(1) + 'px)';
     eyePosL.style.transform = ey;
     eyePosR.style.transform = ey;
@@ -870,6 +1043,7 @@ body {
 
   // ============ 鼠标追踪 ============
   window.addEventListener('pointermove', function (e) {
+    lastActivity = Date.now();
     var nx = (e.clientX / window.innerWidth) * 2 - 1;
     var ny = (e.clientY / window.innerHeight) * 2 - 1;
     look.x = nx; look.y = ny;
@@ -944,6 +1118,8 @@ body {
     pawL.classList.toggle('dsp-cat-paw--up', mode === 'stretch' || mode === 'groom');
     pawR.classList.toggle('dsp-cat-paw--swat', mode === 'butterfly');
     cat.classList.toggle('dsp-cat--yawn', mode === 'yawn');
+    cat.classList.toggle('dsp-cat--hunt', mode === 'butterfly');
+    cat.classList.toggle('dsp-cat--sleep', mode === 'nap');
   }
 
   function startPeek() {
@@ -968,24 +1144,52 @@ body {
   }
   function startButterfly() {
     mode = 'butterfly'; renderMode();
-    showBubble('蝴蝶别跑！看我的～扑！', 6200);
+    showBubble('蝴蝶别跑！看我的～扑！', 6500);
     runSeq([
-      { set: { closed: false, happy: false, walking: false, x: 0, z: 6, ry: 6, y: 0, rz: 0, sx: 1, s: 1 }, wait: 1100 },
-      { set: { ry: -6 }, wait: 1100 },
-      { set: { ry: 6 }, wait: 1100 },
-      { set: { ry: -4 }, wait: 1100 },
-      { set: { ry: 0 }, wait: 800 }
+      { set: { closed: false, happy: false, walking: false, x: 0, z: 6, ry: 8, y: 0, rz: 0, sx: 1, s: 1 }, wait: 900 },
+      { set: { ry: -12 }, wait: 900 },
+      { set: { ry: 10 }, wait: 900 },
+      { set: { ry: -10, rz: 2 }, wait: 1100 },
+      { set: { ry: 12, rz: -2 }, wait: 1100 },
+      { set: { ry: -8, rz: 0 }, wait: 1100 },
+      { set: { ry: 10 }, wait: 1100 },
+      { set: { ry: 0 }, wait: 900 },
+      { set: { ry: -6 }, wait: 900 },
+      { set: { ry: 6 }, wait: 900 },
+      { set: { ry: 0, rz: 0 }, wait: 700 }
     ], function () { mode = 'idle'; renderMode(); });
   }
   function startNap() {
     mode = 'nap'; renderMode();
     showBubble('呼噜……', 6600);
     runSeq([
-      { set: { happy: false, walking: false, x: -14, z: 6, rz: -5, ry: 4, sx: 1, s: 0.97, y: 0, closed: true }, wait: 3200 },
-      { set: { s: 0.98 }, wait: 2000 },
-      { set: { s: 0.97 }, wait: 1500 },
-      { set: { x: 0, rz: 0, ry: 0, s: 1, closed: false } }
+      { set: { closed: false, happy: false, walking: false, x: -14, z: 6, rz: 0, ry: 0, sx: 1, s: 1, y: 0 }, wait: 160 },
+      { set: { y: 2, closed: true }, wait: 1000 },
+      { set: { y: 1 }, wait: 1500 },
+      { set: { y: 2 }, wait: 1500 },
+      { set: { y: 1 }, wait: 1500 },
+      { set: { x: 0, y: 0, closed: false } }
     ], function () { mode = 'idle'; renderMode(); });
+  }
+  // 长时间无人互动 → 趴着睡 3 分钟，醒来伸懒腰
+  function startSleep() {
+    mode = 'nap'; renderMode();
+    sleeping = true;
+    runSeq([
+      { set: { closed: false, happy: false, walking: false, x: -14, z: 6, rz: 0, ry: 0, sx: 1, s: 1, y: 0 }, wait: 140 },
+      { set: { y: 2, closed: true }, wait: 1000 },
+      { set: { y: 1 }, wait: 900 }
+    ]);
+    setTimeout(function () {
+      if (!sleeping) return;
+      sleeping = false;
+      mode = 'idle'; renderMode();
+      runSeq([
+        { set: { closed: false, s: 1, y: 0 }, wait: 380 },
+        { set: { sx: 1.12, s: 0.92, y: -2, ry: 4 }, wait: 700 },
+        { set: { sx: 1, s: 1, y: 0, ry: 0 }, wait: 480 }
+      ]);
+    }, 180000);
   }
   function startGroom() {
     mode = 'groom'; renderMode();
@@ -1090,39 +1294,55 @@ body {
     }, 10500);
   }
 
-  // ============ 提醒 ============
-  var nextKind = 0;
-  function fireReminder() {
-    var kind = nextKind % 3;
-    nextKind++;
+  // ============ 提醒（喝水 / 久坐走走 双定时） ============
+  function fireWater() {
     cancelSeq();
-    if (kind === 0) startWater();
-    else if (kind === 1) startStretch();
+    sleeping = false;
+    startWater();
+  }
+  function fireMove() {
+    cancelSeq();
+    sleeping = false;
+    // 久坐起来走走：轮流 伸懒腰 / 看远方
+    if (Math.random() < 0.7) startStretch();
     else startEyes();
   }
-  var nextAt = Date.now() + state.intervalMin * 60000;
+  var nextWaterAt = Date.now() + state.waterMin * 60000;
+  var nextMoveAt = Date.now() + state.moveMin * 60000;
   setInterval(function () {
     if (!state.remindersOn || !state.visible) return;
     var now = Date.now();
-    if (now >= nextAt) {
-      fireReminder();
-      nextAt = now + state.intervalMin * 60000;
+    if (now >= nextWaterAt) {
+      fireWater();
+      nextWaterAt = now + state.waterMin * 60000;
+    }
+    if (now >= nextMoveAt) {
+      fireMove();
+      nextMoveAt = now + state.moveMin * 60000;
     }
   }, 1000);
 
   // ============ 待机行为循环 ============
+  function playAnim(name) {
+    if (name === 'peek') startPeek();
+    else if (name === 'butterfly') startButterfly();
+    else if (name === 'nap') startNap();
+    else if (name === 'groom') startGroom();
+    else if (name === 'yawn') startYawn();
+    else if (name === 'curious') startCurious();
+    else startRelax();
+  }
+  var ANIM_NAMES = ['peek', 'butterfly', 'nap', 'groom', 'yawn', 'curious', 'relax'];
   (function behaviorLoop() {
     setTimeout(function () {
       if (state.visible && !big.classList.contains('dsp-big--show')) {
-        var names = ['peek', 'butterfly', 'nap', 'groom', 'yawn', 'curious', 'relax'];
-        var name = pick(names);
-        if (name === 'peek') startPeek();
-        else if (name === 'butterfly') startButterfly();
-        else if (name === 'nap') startNap();
-        else if (name === 'groom') startGroom();
-        else if (name === 'yawn') startYawn();
-        else if (name === 'curious') startCurious();
-        else startRelax();
+        if (sleeping) {
+          // 睡觉中，不打扰
+        } else if (Date.now() - lastActivity > 150000) {
+          startSleep();
+        } else {
+          playAnim(pick(ANIM_NAMES));
+        }
         setTimeout(behaviorLoop, 1000);
       } else {
         behaviorLoop();
@@ -1130,8 +1350,22 @@ body {
     }, 20000);
   })();
 
+  // ============ 交互：点击花瓶 → 依次切换动画循环 ============
+  var vaseEl = document.querySelector('.dsp-vase');
+  var animIdx = -1;
+  vaseEl.addEventListener('click', function (e) {
+    e.stopPropagation();
+    lastActivity = Date.now();
+    sleeping = false;
+    cancelSeq();
+    animIdx = (animIdx + 1) % ANIM_NAMES.length;
+    playAnim(ANIM_NAMES[animIdx]);
+  });
+
   // ============ 交互：点击 ============
   function onPetClick() {
+    lastActivity = Date.now();
+    sleeping = false;
     cancelSeq();
     mode = 'idle';
     renderMode();
@@ -1153,13 +1387,19 @@ body {
     e.preventDefault();
     try { pet.setPointerCapture(e.pointerId); } catch (err) { /* noop */ }
     var rect = pet.getBoundingClientRect();
-    drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, lx: rect.left, ty: rect.top };
+    drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, lx: rect.left, ty: rect.top, lastX: e.clientX, lastY: e.clientY };
     moved = false;
   });
   pet.addEventListener('pointermove', function (e) {
     if (!drag || drag.id !== e.pointerId) return;
     var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+    if (isElectron && winAPI) {
+      // 桌面版：拖动 = 移动整个悬浮窗口
+      winAPI.moveWindow(e.clientX - drag.lastX, e.clientY - drag.lastY);
+      drag.lastX = e.clientX; drag.lastY = e.clientY;
+      return;
+    }
     var x = clamp(drag.lx + dx, 8, window.innerWidth - 256);
     var y = clamp(drag.ty + dy, 8, window.innerHeight - 220);
     pet.style.left = x + 'px';
@@ -1171,6 +1411,7 @@ body {
     if (!drag || drag.id !== e.pointerId) return;
     drag = null;
     try { pet.releasePointerCapture(e.pointerId); } catch (err) { /* noop */ }
+    if (!isElectron) savePos();
   }
   pet.addEventListener('pointerup', endDrag);
   pet.addEventListener('pointercancel', endDrag);
@@ -1198,27 +1439,74 @@ body {
     settingsPanel.classList.toggle('dsp-settings-panel--show');
   });
 
-  // ============ 设置面板 ============
+  // ============ 设置面板（含永久存储） ============
   remindSwitch.addEventListener('click', function () {
     state.remindersOn = !state.remindersOn;
     remindSwitch.classList.toggle('dsp-switch--on', state.remindersOn);
     remindSwitch.setAttribute('aria-pressed', String(state.remindersOn));
+    saveSettings();
   });
-  intervalSelect.addEventListener('change', function () {
-    state.intervalMin = Number(intervalSelect.value);
-    nextAt = Date.now() + state.intervalMin * 60000;
-  });
+  function refreshChips() {
+    var chips = settingsPanel.querySelectorAll('.dsp-chip');
+    for (var i = 0; i < chips.length; i++) {
+      var c = chips[i];
+      var target = c.getAttribute('data-target');
+      var v = target === 'water' ? state.waterMin : state.moveMin;
+      c.classList.toggle('dsp-chip--on', Number(c.getAttribute('data-min')) === v);
+    }
+  }
+  function setIntervalMin(target, v) {
+    v = clamp(Math.round(v) || (target === 'water' ? 45 : 30), 5, 180);
+    if (target === 'water') {
+      state.waterMin = v;
+      waterInput.value = v;
+      nextWaterAt = Date.now() + v * 60000;
+    } else {
+      state.moveMin = v;
+      moveInput.value = v;
+      nextMoveAt = Date.now() + v * 60000;
+    }
+    saveSettings();
+    refreshChips();
+  }
+  waterInput.addEventListener('change', function () { setIntervalMin('water', Number(waterInput.value)); });
+  moveInput.addEventListener('change', function () { setIntervalMin('move', Number(moveInput.value)); });
+  var chips = settingsPanel.querySelectorAll('.dsp-chip');
+  for (var ci = 0; ci < chips.length; ci++) {
+    (function (c) {
+      c.addEventListener('click', function () {
+        setIntervalMin(c.getAttribute('data-target'), Number(c.getAttribute('data-min')));
+      });
+    })(chips[ci]);
+  }
   document.getElementById('resetPosBtn').addEventListener('click', function () {
     pet.style.left = '';
     pet.style.top = '';
     pet.style.right = '';
     pet.style.bottom = '';
+    try { localStorage.removeItem('dspet-pos'); } catch (err) { /* ignore */ }
   });
   document.getElementById('hideBtn').addEventListener('click', function () {
     closeBtn.click();
   });
 
   // ============ 欢迎 ============
+  // 恢复上次保存的位置
+  try {
+    var savedPos = JSON.parse(localStorage.getItem('dspet-pos'));
+    if (savedPos && typeof savedPos.x === 'number' && typeof savedPos.y === 'number') {
+      pet.style.left = savedPos.x + 'px';
+      pet.style.top = savedPos.y + 'px';
+      pet.style.right = 'auto';
+      pet.style.bottom = 'auto';
+    }
+  } catch (err) { /* ignore */ }
+  // 初始化设置面板 UI
+  remindSwitch.classList.toggle('dsp-switch--on', state.remindersOn);
+  remindSwitch.setAttribute('aria-pressed', String(state.remindersOn));
+  waterInput.value = state.waterMin;
+  moveInput.value = state.moveMin;
+  refreshChips();
   applyPose();
   setTimeout(function () {
     showBubble('喵～我是你的小猫咪！我会躲猫猫、捉蝴蝶，还会按时提醒你喝水哦～', 8000);

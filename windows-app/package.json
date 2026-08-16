@@ -1,0 +1,44 @@
+{
+  "name": "kun-like-pet",
+  "productName": "KunLike桌宠",
+  "version": "1.0.0",
+  "description": "一只会躲猫猫、捉蝴蝶、趴着睡、按时提醒喝水与久坐走走的 3D 可爱猫咪桌宠",
+  "main": "main.js",
+  "author": "kaiking01",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.kaiking.kunlikepet",
+    "productName": "KunLike桌宠",
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "KunLike桌宠"
+    },
+    "files": [
+      "main.js",
+      "preload.js"
+    ],
+    "extraResources": [
+      { "from": "../index.html", "to": "index.html" }
+    ],
+    "directories": {
+      "output": "../dist"
+    }
+  }
+}
