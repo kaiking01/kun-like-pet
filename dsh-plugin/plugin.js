@@ -1,18 +1,18 @@
 /**
  * Kun Like 桌宠 · DeepSeek Harness (DSH) 动态插件源码
  * ----------------------------------------------------------
- * 这是本仓库桌宠的 DSH 动态 Cordis 插件版本（Client half）。
+ * 这是本仓库桌宠的 DSH 动态 Cordis 插件版本（Client half，Canvas 3D 版）。
  * 与根目录 index.html 的独立网页版功能一致：
- * 真猫习性的 3D 猫咪 —— CSS 3D 多层头、鼠标追踪转头、
- * 不对称眨眼/慢眨眼、舔毛/打哈欠/歪头好奇/打盹做梦、
- * 喝水后变身巨猫敲屏提醒。纯文字卖萌。
+ * Canvas 2D 自绘 3D 软渲染猫 —— 真实渐变光影、3D 头部转向（特征随转角
+ * 收缩错位）、弹性呼吸/走路/尾巴、鼠标追踪、不对称眨眼、舔毛/打哈欠/
+ * 歪头好奇/打盹做梦、喝水后变身巨猫敲屏提醒。纯文字卖萌，零依赖。
  *
  * 使用方式见同目录 README.md。
  * 该文件内容就是 cordis_define 的 code.client 函数体（纯 JavaScript，
  * 无 JSX / TypeScript，无需打包）。
  */
 return {
-  name: 'cute-desk-pet-v4',
+  name: 'cute-desk-pet-v5',
   inject: ['timer'],
   apply(ctx) {
     const slots = ctx.get('slots')
@@ -29,10 +29,10 @@ return {
 }
 .dspet:active { cursor: grabbing; }
 
-/* ================= scene (3D perspective) ================= */
+/* ================= scene ================= */
 .dsp-scene {
   position: absolute; left: 0; bottom: 0; width: 240px; height: 200px;
-  perspective: 900px; perspective-origin: 50% 90%;
+  overflow: hidden;
 }
 .dsp-shadow {
   position: absolute; bottom: 0; width: 96px; height: 20px;
@@ -109,7 +109,7 @@ return {
 }
 @keyframes dsp-water { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px); } }
 
-/* ================= butterflies (natural flight: banking + hover + dart) ================= */
+/* ================= butterflies ================= */
 .dsp-butterflies {
   position: absolute; inset: 0; z-index: 15; pointer-events: none;
   opacity: 0; transition: opacity 0.6s ease;
@@ -129,7 +129,6 @@ return {
   0%, 100% { transform: perspective(400px) rotateY(0deg); }
   50% { transform: perspective(400px) rotateY(78deg); }
 }
-/* 飞行1：花丛右侧悬停 → 急窜右上（banking）→ 悬停 → 急窜左上远处 → 回花丛 */
 @keyframes dsp-fly1 {
   0%, 12% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
   24% { transform: translate3d(52px, -30px, 24px) rotateZ(-16deg) scale(1.14); }
@@ -141,7 +140,6 @@ return {
   88% { transform: translate3d(-24px, -46px, 14px) rotateZ(18deg) scale(1.08); }
   94% { transform: translate3d(-14px, -48px, 14px) rotateZ(-10deg) scale(1.08); }
 }
-/* 飞行2：高处悬停 → 俯冲左下 → 盘旋回花丛上方 */
 @keyframes dsp-fly2 {
   0%, 10% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
   22% { transform: translate3d(-54px, 14px, -18px) rotateZ(14deg) scale(0.92); }
@@ -153,7 +151,6 @@ return {
   84% { transform: translate3d(40px, -10px, -12px) rotateZ(-14deg) scale(0.94); }
   92% { transform: translate3d(30px, -12px, -12px) rotateZ(10deg) scale(0.94); }
 }
-/* 飞行3：花间小范围徘徊 + 小绕圈 */
 @keyframes dsp-fly3 {
   0%, 8% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
   16% { transform: translate3d(24px, -20px, 10px) rotateZ(-10deg) scale(1.08); }
@@ -164,236 +161,6 @@ return {
   66% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
   78% { transform: translate3d(-34px, -18px, -10px) rotateZ(14deg) scale(0.94); }
   88% { transform: translate3d(-16px, -22px, -10px) rotateZ(-10deg) scale(0.94); }
-}
-
-/* ================= cat ================= */
-.dsp-cat-z {
-  position: absolute; left: 104px; bottom: 0; width: 124px; height: 116px;
-  transform-style: preserve-3d;
-  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dsp-cat {
-  position: absolute; inset: 0;
-  transform: translateZ(30px);
-  transform-style: preserve-3d;
-}
-.dsp-cat-walk {
-  position: absolute; inset: 0;
-  transform-style: preserve-3d;
-  animation: dsp-idlebob 3.6s ease-in-out infinite;
-}
-.dsp-cat-walk--on { animation: dsp-walkbob 0.75s ease-in-out infinite; }
-@keyframes dsp-idlebob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-@keyframes dsp-walkbob {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  20% { transform: translateY(-5px) rotate(-2.5deg); }
-  40% { transform: translateY(0) rotate(0deg); }
-  60% { transform: translateY(-5px) rotate(2.5deg); }
-  80% { transform: translateY(0) rotate(0deg); }
-}
-.dsp-cat-tail {
-  position: absolute; right: -22px; bottom: 8px; width: 46px; height: 15px;
-  background: linear-gradient(180deg, #ffe8c8, #ffd9a6);
-  border: 2px solid rgba(214, 164, 112, 0.35);
-  border-radius: 4px 12px 12px 4px;
-  transform-origin: left center;
-  animation: dsp-tailwag 2.4s ease-in-out infinite;
-}
-@keyframes dsp-tailwag {
-  0%, 100% { transform: rotate(9deg); }
-  25% { transform: rotate(-7deg); }
-  50% { transform: rotate(13deg); }
-  75% { transform: rotate(-5deg); }
-}
-
-/* ============ 3D head (multi-plane: front / back / sides) ============ */
-.dsp-h3d {
-  position: absolute; left: 50%; bottom: 26px; margin-left: -46px;
-  width: 92px; height: 84px;
-  transform-style: preserve-3d;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dsp-h3d-f {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 35% 25%, #fff3dd, #ffe3b8 55%, #ffd9a3);
-  border: 2px solid rgba(214, 164, 112, 0.4);
-  border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
-  box-shadow: inset 0 -6px 12px rgba(230, 170, 110, 0.22);
-  transform: translateZ(15px);
-}
-.dsp-h3d-b {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 40%, #f6d3a4, #f0c48e 60%, #e9b87e);
-  border: 2px solid rgba(214, 164, 112, 0.35);
-  border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
-  transform: rotateY(180deg) translateZ(15px);
-}
-/* 左右侧面已移除：头部为正面 + 脑后两层，3D 转身靠透视收缩 */
-.dsp-cat-ear {
-  position: absolute; top: -16px; width: 0; height: 0;
-  border-left: 20px solid transparent; border-right: 20px solid transparent;
-  border-bottom: 30px solid #ffe0b2;
-  filter: drop-shadow(0 0 1px rgba(214, 164, 112, 0.4));
-}
-.dsp-cat-ear--l { left: 8px; transform-origin: 50% 100%; animation: dsp-earchirp-l 8s ease-in-out infinite; }
-.dsp-cat-ear--r { right: 8px; transform-origin: 50% 100%; animation: dsp-earchirp-r 9s ease-in-out infinite; }
-.dsp-cat-ear--l::after, .dsp-cat-ear--r::after {
-  content: ''; position: absolute; top: 12px; left: -10px;
-  width: 0; height: 0;
-  border-left: 10px solid transparent; border-right: 10px solid transparent;
-  border-bottom: 15px solid #ffb3c6;
-}
-@keyframes dsp-earchirp-l {
-  0%, 88%, 100% { transform: rotate(-12deg); }
-  91% { transform: rotate(-2deg); }
-  94% { transform: rotate(-12deg); }
-}
-@keyframes dsp-earchirp-r {
-  0%, 78%, 100% { transform: rotate(12deg); }
-  82% { transform: rotate(2deg); }
-  86% { transform: rotate(12deg); }
-}
-
-/* face features live on the front plane */
-.dsp-cat-face {
-  position: absolute; top: 16px; left: 0; width: 100%; height: 58px;
-  transform-style: preserve-3d;
-}
-.dsp-eye-pos { position: absolute; top: 6px; }
-.dsp-eye-pos--l { left: 18px; }
-.dsp-eye-pos--r { right: 18px; }
-.dsp-cat-eye {
-  width: 13px; height: 16px;
-  background: #5b4636; border-radius: 50%;
-  position: relative;
-}
-.dsp-cat-eye::after {
-  content: ''; position: absolute; left: 3px; top: 3px; width: 4px; height: 5px;
-  background: rgba(255, 255, 255, 0.85); border-radius: 50%;
-}
-.dsp-eye-pos--l .dsp-cat-eye { animation: dsp-blinkL 4.2s ease-in-out infinite; }
-.dsp-eye-pos--r .dsp-cat-eye { animation: dsp-blinkR 5.9s ease-in-out infinite; }
-@keyframes dsp-blinkL {
-  0%, 86%, 100% { transform: scaleY(1); }
-  88%, 91% { transform: scaleY(0.08); }
-}
-@keyframes dsp-blinkR {
-  0%, 60%, 100% { transform: scaleY(1); }
-  62%, 65% { transform: scaleY(0.08); }
-  78%, 84% { transform: scaleY(0.06); }
-}
-.dsp-cat-eye--happy {
-  width: 12px; height: 7px; background: transparent;
-  border-top: 3px solid #5b4636; border-radius: 0; animation: none !important;
-}
-.dsp-cat-eye--happy::after { display: none; }
-.dsp-cat-eye--closed {
-  background: transparent; height: 6px;
-  border-bottom: 3px solid #5b4636; border-radius: 0; animation: none !important;
-}
-.dsp-cat-eye--closed::after { display: none; }
-.dsp-cat-nose {
-  position: absolute; left: 50%; top: 22px; margin-left: -4px;
-  width: 8px; height: 6px;
-  background: #ff9db4; border-radius: 4px 4px 6px 6px;
-  animation: dsp-sniff 5.2s ease-in-out infinite;
-}
-@keyframes dsp-sniff {
-  0%, 90%, 100% { transform: scaleY(1); }
-  93% { transform: scaleY(1.25); }
-  96% { transform: scaleY(1); }
-}
-.dsp-cat-blush {
-  position: absolute; top: 30px; width: 14px; height: 8px;
-  background: rgba(255, 138, 158, 0.75); border-radius: 50%;
-}
-.dsp-cat-blush--l { left: 6px; }
-.dsp-cat-blush--r { right: 6px; }
-.dsp-cat-mouth {
-  position: absolute; left: 50%; top: 32px; margin-left: -6px;
-  width: 12px; height: 7px;
-  border-bottom: 2.5px solid #5b4636; border-radius: 0 0 12px 12px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.dsp-cat-yawn {
-  position: absolute; left: 50%; top: 26px; margin-left: -10px;
-  width: 20px; height: 16px;
-  background: #7a4a35; border-radius: 2px 2px 12px 12px;
-  transform: scale(0); transform-origin: top center;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-  opacity: 0;
-}
-.dsp-cat-yawn::after {
-  content: ''; position: absolute; left: 4px; top: 8px; width: 12px; height: 7px;
-  background: #ff9db4; border-radius: 8px 8px 12px 12px;
-}
-.dsp-cat--yawn .dsp-cat-yawn { transform: scale(1); opacity: 1; }
-.dsp-cat--yawn .dsp-cat-mouth { transform: scale(0); opacity: 0; }
-.dsp-whisker {
-  position: absolute; top: 26px; width: 26px; height: 2px;
-  background: rgba(91, 70, 54, 0.45); border-radius: 2px;
-  transform-origin: 100% 50%;
-}
-.dsp-whisker--l1 { left: -14px; animation: dsp-whiskL1 6s ease-in-out infinite; }
-.dsp-whisker--l2 { left: -14px; top: 35px; animation: dsp-whiskL2 7s ease-in-out infinite; }
-.dsp-whisker--r1 { right: -14px; animation: dsp-whiskR1 6.4s ease-in-out infinite; }
-.dsp-whisker--r2 { right: -14px; top: 35px; animation: dsp-whiskR2 7.4s ease-in-out infinite; }
-@keyframes dsp-whiskL1 {
-  0%, 88%, 100% { transform: rotate(8deg); }
-  92% { transform: rotate(12deg); }
-  96% { transform: rotate(8deg); }
-}
-@keyframes dsp-whiskL2 {
-  0%, 84%, 100% { transform: rotate(-6deg); }
-  89% { transform: rotate(-10deg); }
-  94% { transform: rotate(-6deg); }
-}
-@keyframes dsp-whiskR1 {
-  0%, 86%, 100% { transform: rotate(-8deg); }
-  90% { transform: rotate(-12deg); }
-  94% { transform: rotate(-8deg); }
-}
-@keyframes dsp-whiskR2 {
-  0%, 82%, 100% { transform: rotate(6deg); }
-  87% { transform: rotate(10deg); }
-  92% { transform: rotate(6deg); }
-}
-.dsp-cat-body {
-  position: absolute; left: 50%; bottom: 2px; margin-left: -33px;
-  width: 66px; height: 40px;
-  background: linear-gradient(180deg, #fff0d8, #ffdfae);
-  border: 2px solid rgba(214, 164, 112, 0.35);
-  border-radius: 20px 20px 14px 14px;
-  box-shadow: inset 0 -5px 10px rgba(230, 170, 110, 0.2);
-  transform: translateZ(6px);
-}
-.dsp-cat-scarf {
-  position: absolute; left: 50%; bottom: 22px; margin-left: -30px;
-  width: 60px; height: 13px;
-  background: linear-gradient(180deg, #ff9dbe, #ff7ea8);
-  border-radius: 7px;
-  box-shadow: 0 2px 4px rgba(255, 126, 168, 0.35);
-  transform: translateZ(12px);
-}
-.dsp-cat-scarf::after {
-  content: ''; position: absolute; left: 50%; top: 5px; margin-left: -7px;
-  width: 14px; height: 11px; background: #ffb3c9; border-radius: 4px;
-}
-.dsp-cat-paw {
-  position: absolute; bottom: 0; width: 26px; height: 14px;
-  background: #ffe8c8; border: 2px solid rgba(214, 164, 112, 0.35);
-  border-radius: 50%;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.dsp-cat-paw--l { left: 28px; }
-.dsp-cat-paw--r { right: 28px; }
-.dsp-cat-paw--up { animation: dsp-pawup 2.2s ease-in-out infinite; }
-.dsp-cat-paw--swat { animation: dsp-swat 1.2s ease-in-out infinite; }
-@keyframes dsp-pawup { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-17px) rotate(-12deg); } }
-@keyframes dsp-swat {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  30% { transform: translate(-8px, -26px) rotate(-24deg); }
-  60% { transform: translate(-2px, -8px) rotate(-8deg); }
 }
 
 /* ================= nap fx ================= */
@@ -442,6 +209,12 @@ return {
   55% { transform: scale(1); opacity: 1; }
   66% { transform: scale(1.3); opacity: 0; }
   100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* ================= canvas cat ================= */
+.dsp-canvas {
+  position: absolute; left: 0; bottom: 0; width: 240px; height: 200px;
+  z-index: 3; pointer-events: none;
 }
 
 /* ================= bubble / hearts / close / summon ================= */
@@ -505,7 +278,7 @@ return {
 }
 .dspet-summon:hover { transform: scale(1.06); }
 
-/* ================= BIG cat knock (3D + springy) ================= */
+/* ================= BIG cat knock ================= */
 .dsp-big {
   position: fixed; inset: 0; z-index: 60; pointer-events: none;
   animation: dsp-big-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -529,7 +302,6 @@ return {
 .dsp-big-cat {
   position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%);
   width: min(640px, 66vw); height: 380px;
-  transform-style: preserve-3d;
 }
 .dsp-big-ear {
   position: absolute; top: -58px; width: 0; height: 0;
@@ -553,11 +325,10 @@ return {
   border-radius: 50% 50% 44% 44% / 54% 54% 46% 46%;
   box-shadow: 0 24px 60px rgba(160, 110, 60, 0.3), inset 0 -18px 34px rgba(230, 170, 110, 0.25);
   animation: dsp-bigbob 2.6s ease-in-out infinite;
-  transform-style: preserve-3d;
 }
 @keyframes dsp-bigbob {
-  0%, 100% { transform: translateX(-50%) perspective(900px) rotateY(-7deg) translateY(0); }
-  50% { transform: translateX(-50%) perspective(900px) rotateY(-7deg) translateY(-10px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 .dsp-big-face { position: absolute; top: 44px; left: 0; width: 100%; height: 200px; }
 .dsp-big-eye {
@@ -675,6 +446,212 @@ return {
 .dsp-switch--on .dsp-switch-knob { left: 22px; }
 `)
 
+    // ============================================================
+    // Canvas 3D 软渲染器：真实光影 + 3D 头部转向 + 弹性动作
+    // ============================================================
+    function createCatRenderer(canvas) {
+      const W = 240, H = 200
+      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      canvas.width = W * dpr
+      canvas.height = H * dpr
+      const ctx = canvas.getContext('2d')
+      ctx.scale(dpr, dpr)
+
+      const S = {
+        x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1,
+        walking: false, closed: false, happy: false,
+        look: { x: 0, y: 0 },
+        mode: 'idle',
+        t: 0,
+      }
+      const blink = { l: 0, r: 0 }
+      let blinkLAt = 1600, blinkRAt = 3400
+      const ear = { l: 0, r: 0 }
+      let earLAt = 4200, earRAt = 6100
+      let last = Date.now()
+
+      function ell(x, y, rx, ry, c1, c2, alpha) {
+        const g = ctx.createRadialGradient(x - rx * 0.35, y - ry * 0.45, rx * 0.12, x, y, Math.max(rx, ry))
+        g.addColorStop(0, c1)
+        g.addColorStop(1, c2)
+        if (alpha !== undefined) ctx.globalAlpha = alpha
+        ctx.fillStyle = g
+        ctx.beginPath()
+        ctx.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), 0, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.globalAlpha = 1
+      }
+      function tri(x1, y1, x2, y2, x3, y3, c1, c2) {
+        const cx = (x1 + x2 + x3) / 3, cy = (y1 + y2 + y3) / 3
+        const g = ctx.createRadialGradient(cx - 2, cy - 3, 2, cx, cy, Math.max(14, Math.abs(x2 - x1)))
+        g.addColorStop(0, c1)
+        g.addColorStop(1, c2)
+        ctx.fillStyle = g
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.lineTo(x3, y3)
+        ctx.closePath()
+        ctx.fill()
+      }
+
+      function draw() {
+        const now = Date.now()
+        const dt = Math.min(80, now - last)
+        last = now
+        S.t += dt * 0.001
+        if (now > blinkLAt) { blink.l = 1; blinkLAt = now + 1800 + Math.random() * 4200 }
+        if (now > blinkRAt) { blink.r = 1; blinkRAt = now + 2400 + Math.random() * 4800 }
+        blink.l = Math.max(0, blink.l - dt / 130)
+        blink.r = Math.max(0, blink.r - dt / 150)
+        if (now > earLAt) { ear.l = 1; earLAt = now + 3000 + Math.random() * 5000 }
+        if (now > earRAt) { ear.r = 1; earRAt = now + 3500 + Math.random() * 5500 }
+        ear.l = Math.max(0, ear.l - dt / 240)
+        ear.r = Math.max(0, ear.r - dt / 260)
+
+        ctx.clearRect(0, 0, W, H)
+        const walk = S.walking ? Math.sin(S.t * 12) : 0
+        const breathe = S.walking ? 0 : Math.sin(S.t * 2.1) * 1.6
+        const bob = S.walking ? Math.abs(Math.sin(S.t * 12)) * -4 : 0
+
+        const shScale = Math.max(0.55, 1 + S.y / 240)
+        ell(170 + S.x, 166, 40 * shScale, 9 * shScale, 'rgba(120,80,40,0.30)', 'rgba(120,80,40,0)', 0.9)
+
+        const ox = 170 + S.x
+        const oy = 166 - S.y
+        const rz = (S.rz * Math.PI) / 180
+        const cosR = Math.cos(rz), sinR = Math.sin(rz)
+        function P(lx, ly, lz) {
+          const rx0 = lx * cosR - ly * sinR
+          const ry0 = lx * sinR + ly * cosR
+          const sc = 1 + lz * 0.0011
+          return { x: ox + rx0 * sc, y: oy - ry0 * sc, z: lz }
+        }
+
+        const parts = []
+        function push(z, fn) { parts.push({ z, fn }) }
+
+        const headYaw = ((S.ry + S.look.x * 30) * Math.PI) / 180
+        const headPitch = (S.look.y * 12 * Math.PI) / 180
+        const cy_ = Math.cos(headYaw), sy_ = Math.sin(headYaw)
+        function faceX(lx, lz) { return lx * cy_ - lz * sy_ }
+
+        const tw = Math.sin(S.t * 1.8) * 0.55 + Math.sin(S.t * 0.9) * 0.25
+        let tx = -30, ty = 22
+        for (let i = 0; i < 5; i++) {
+          const a = tw + i * 0.16
+          tx += Math.cos(a) * 8
+          ty += Math.sin(a) * 5 + i * 0.6
+          const p = P(tx, ty + 2, 4 - i)
+          const r = 5.5 - i * 0.6
+          push(2 - i, () => ell(p.x, p.y, r, r * 1.35, '#ffe9cc', '#f2c890'))
+        }
+
+        const bodyY = 30 + breathe * 0.6 + bob
+        const bx = S.sx, by = S.s * (S.closed ? 0.97 : 1)
+        push(10, () => ell(P(0, bodyY, 8).x, P(0, bodyY, 8).y, 34 * bx, 30 * by, '#fff3dd', '#f5cf9e'))
+        push(10.5, () => ell(P(0, bodyY - 6, 14).x, P(0, bodyY - 6, 14).y, 18 * bx, 15 * by, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'))
+        push(11, () => ell(P(0, bodyY + 22, 14).x, P(0, bodyY + 22, 14).y, 26 * bx, 8, '#ff9dbe', '#ff6f9c'))
+        push(11.5, () => ell(P(0, bodyY + 22, 16).x, P(0, bodyY + 22, 16).y, 8, 6, '#ffc3d6', '#ff9dbe'))
+
+        const pawUpL = S.mode === 'stretch' || S.mode === 'groom'
+        const swatR = S.mode === 'butterfly'
+        const plx = -15, prx = 15
+        const plY = 6 + (pawUpL ? Math.abs(Math.sin(S.t * 5)) * -16 : Math.max(0, Math.sin(S.t * 12 + 0.8)) * -2.4) + (S.mode === 'groom' ? -4 : 0)
+        const prY = 6 + (swatR ? -Math.abs(Math.sin(S.t * 9)) * 14 : Math.max(0, Math.sin(S.t * 12)) * -2.4)
+        push(9, () => ell(P(plx, plY, 12).x, P(plx, plY, 12).y, 12, 8, '#ffe9cc', '#f2c890'))
+        push(9, () => ell(P(prx, prY, 12).x, P(prx, prY, 12).y, 12, 8, '#ffe9cc', '#f2c890'))
+        push(9.1, () => ell(P(plx, plY + 4, 13).x, P(plx, plY + 4, 13).y, 5, 3.4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
+        push(9.1, () => ell(P(prx, prY + 4, 13).x, P(prx, prY + 4, 13).y, 5, 3.4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
+
+        const headY = 72 + breathe + bob * 0.6 + (S.mode === 'yawn' ? -3 : 0)
+        const hp = P(0, headY, 0)
+        const hr = 30
+        push(20, () => ell(hp.x, hp.y, hr, hr * 0.92, '#fff6e4', '#f7d5a5'))
+        push(20.4, () => ell(hp.x - hr * 0.28, hp.y - hr * 0.34, hr * 0.5, hr * 0.34, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'))
+
+        const eL = faceX(-21, 4), eR = faceX(21, 4)
+        const elx = hp.x + eL, ely = hp.y - 34 - Math.sin(headPitch) * 18 + ear.l * -4
+        const erx = hp.x + eR, ery = hp.y - 34 - Math.sin(headPitch) * 18 + ear.r * -4
+        const ew = 13 * (0.6 + 0.4 * Math.cos(headYaw))
+        push(19, () => tri(elx - ew, ely + 16, elx + ew, ely + 16, elx, ely, '#ffe4bd', '#f0c48e'))
+        push(19, () => tri(erx - ew, ery + 16, erx + ew, ery + 16, erx, ery, '#ffe4bd', '#f0c48e'))
+        push(18.6, () => tri(elx - ew * 0.5, ely + 15, elx + ew * 0.5, ely + 15, elx, ely + 6, '#ffb8cc', '#ff9db4'))
+        push(18.6, () => tri(erx - ew * 0.5, ery + 15, erx + ew * 0.5, ery + 15, erx, ery + 6, '#ffb8cc', '#ff9db4'))
+
+        push(21, () => {
+          const pitch = Math.sin(headPitch)
+          const eyeY0 = hp.y - 6 - pitch * 8
+          const eyeOpenL = S.happy || S.closed ? 1 : 1 - blink.l * 0.92
+          const eyeOpenR = S.happy || S.closed ? 1 : 1 - blink.r * 0.92
+          const exL = faceX(-13, 10), exR = faceX(13, 10)
+          const exl = hp.x + exL + S.look.x * 2, exr = hp.x + exR + S.look.x * 2
+          const ewl = 5.6 * (0.5 + 0.5 * Math.cos(headYaw)), ewr = ewl
+          const ehl = 7.5 * eyeOpenL, ehr = 7.5 * eyeOpenR
+          if (S.happy || S.closed) {
+            const arc = S.closed ? -1 : 1
+            ctx.strokeStyle = '#5b4636'
+            ctx.lineWidth = 2.2
+            ctx.lineCap = 'round'
+            ctx.beginPath()
+            ctx.arc(exl, eyeY0, 5, Math.PI * (arc > 0 ? 0 : 0.15), Math.PI * (arc > 0 ? 1 : 0.85), arc < 0)
+            ctx.stroke()
+            ctx.beginPath()
+            ctx.arc(exr, eyeY0, 5, Math.PI * (arc > 0 ? 0 : 0.15), Math.PI * (arc > 0 ? 1 : 0.85), arc < 0)
+            ctx.stroke()
+          } else {
+            ell(exl, eyeY0, ewl, ehl, '#5b4636', '#4a3828')
+            ell(exr, eyeY0, ewl, ehr, '#5b4636', '#4a3828')
+            ell(exl - ewl * 0.25, eyeY0 - ehl * 0.3, ewl * 0.4, ehl * 0.32, 'rgba(255,255,255,0.9)', 'rgba(255,255,255,0)')
+            ell(exr - ewl * 0.25, eyeY0 - ehl * 0.3, ewl * 0.4, ehl * 0.32, 'rgba(255,255,255,0.9)', 'rgba(255,255,255,0)')
+          }
+          const bxl = faceX(-20, 6), bxr = faceX(20, 6)
+          ell(hp.x + bxl, hp.y + 4, 6.5, 3.6, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
+          ell(hp.x + bxr, hp.y + 4, 6.5, 3.6, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
+          const nx = hp.x + faceX(0, 14)
+          ell(nx, hp.y + 10 - pitch * 4, 3.4, 2.6, '#ff9db4', '#ff7f9e')
+          const mx = hp.x + faceX(0, 14)
+          const my = hp.y + 15 - pitch * 5
+          if (S.mode === 'yawn') {
+            ell(mx, my + 2, 8, 7, '#7a4a35', '#5f3525')
+            ell(mx, my + 4, 5, 3.4, '#ff9db4', '#ff7f9e')
+          } else {
+            ctx.strokeStyle = '#5b4636'
+            ctx.lineWidth = 1.8
+            ctx.lineCap = 'round'
+            ctx.beginPath()
+            ctx.arc(mx, my, 4, 0, Math.PI)
+            ctx.stroke()
+          }
+          ctx.strokeStyle = 'rgba(91,70,54,0.5)'
+          ctx.lineWidth = 1
+          const wx = hp.x + faceX(-22, 4), wy = hp.y + 2
+          ctx.beginPath(); ctx.moveTo(wx, wy - 5); ctx.quadraticCurveTo(wx - 14, wy - 6, wx - 18, wy - 9); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(wx, wy + 2); ctx.quadraticCurveTo(wx - 14, wy + 4, wx - 18, wy + 4); ctx.stroke()
+          const wx2 = hp.x + faceX(22, 4)
+          ctx.beginPath(); ctx.moveTo(wx2, wy - 5); ctx.quadraticCurveTo(wx2 + 14, wy - 6, wx2 + 18, wy - 9); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(wx2, wy + 2); ctx.quadraticCurveTo(wx2 + 14, wy + 4, wx2 + 18, wy + 4); ctx.stroke()
+          ctx.strokeStyle = 'rgba(200,150,110,0.4)'
+          ctx.lineWidth = 2
+          for (let i = 0; i < 3; i++) {
+            const sx = hp.x + faceX(-8 + i * 8, 2)
+            ctx.beginPath()
+            ctx.moveTo(sx, hp.y - 18 + pitch * 4)
+            ctx.quadraticCurveTo(sx + (i - 1) * 2, hp.y - 24, sx, hp.y - 27 + pitch * 2)
+            ctx.stroke()
+          }
+        })
+
+        parts.sort((a, b) => a.z - b.z)
+        for (const p of parts) p.fn()
+      }
+
+      return {
+        update(state) { Object.assign(S, state) },
+        frame: draw,
+      }
+    }
+
     // ---------- shared store ----------
     const state = {
       visible: true,
@@ -726,7 +703,7 @@ return {
     function PetOverlay() {
       const visible = useStore((s) => s.visible)
       const pos = useStore((s) => s.pos)
-      const [pose, setPose] = React.useState({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, z: 6, closed: false, happy: false, walking: false })
+      const [pose, setPose] = React.useState({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, closed: false, happy: false, walking: false })
       const [look, setLook] = React.useState({ x: 0, y: 0 })
       const [mode, setMode] = React.useState('idle')
       const [bubble, setBubble] = React.useState(null)
@@ -740,8 +717,34 @@ return {
       const dragRef = React.useRef(null)
       const movedRef = React.useRef(false)
       const petRef = React.useRef(null)
+      const canvasRef = React.useRef(null)
+      const rendererRef = React.useRef(null)
+      const latestRef = React.useRef({ x: 0, y: 0, rz: 0, ry: 0, sx: 1, s: 1, closed: false, happy: false, walking: false, look: { x: 0, y: 0 }, mode: 'idle' })
+      latestRef.current = { ...pose, look, mode }
 
       React.useEffect(() => () => { mountedRef.current = false }, [])
+
+      // canvas renderer loop
+      React.useEffect(() => {
+        if (!canvasRef.current) return
+        const renderer = createCatRenderer(canvasRef.current)
+        rendererRef.current = renderer
+        let disposed = false
+        let raf = 0
+        const loop = () => {
+          if (disposed) return
+          renderer.update(latestRef.current)
+          renderer.frame()
+          raf = window.requestAnimationFrame(loop)
+        }
+        if (typeof window.requestAnimationFrame === 'function') {
+          raf = window.requestAnimationFrame(loop)
+        } else {
+          const id = ctx.interval(loop, 16)
+          return () => { disposed = true; id() }
+        }
+        return () => { disposed = true; window.cancelAnimationFrame(raf) }
+      }, [])
 
       // welcome bubble on first mount
       React.useEffect(() => {
@@ -752,7 +755,7 @@ return {
         return t
       }, [])
 
-      // mouse look: head & eyes follow the pointer, decays back to front
+      // mouse look
       React.useEffect(() => {
         let decay = null
         const onMove = (e) => {
@@ -767,7 +770,6 @@ return {
         return () => { window.removeEventListener('pointermove', throttled); if (decay) decay() }
       }, [])
 
-      // ---------- smooth pose / sequence engine ----------
       function runSeq(steps, onDone) {
         const id = ++seqRef.current
         let i = 0
@@ -799,7 +801,6 @@ return {
         }, ms || 6000)
       }
 
-      // crouch + settle helpers: real-cat weight
       function crouch() { return { set: { y: 2, s: 0.97, sx: 1 }, wait: 220 } }
       function settle() {
         return [
@@ -816,15 +817,14 @@ return {
         ]
       }
 
-      // ---------- behaviors ----------
       function startPeek() {
         setMode('peek')
         showBubble('喵？看见我了吗？', 6500)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
+          { set: { closed: false, happy: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
           crouch(),
           ...wiggle(),
-          { set: { walking: true, x: -96, z: 2, y: 0, s: 1 }, wait: 1150 },
+          { set: { walking: true, x: -96, y: 0, s: 1 }, wait: 1150 },
           { set: { walking: false, ry: -10 }, wait: 300 },
           ...settle(),
           { set: { y: -26 }, wait: 850 },
@@ -832,7 +832,7 @@ return {
           { set: { y: -26, ry: 8 }, wait: 850 },
           { set: { y: 0, ry: 0 }, wait: 650 },
           crouch(),
-          { set: { walking: true, x: 0, z: 6 }, wait: 1150 },
+          { set: { walking: true, x: 0 }, wait: 1150 },
           { set: { walking: false } },
           ...settle(),
         ], () => setMode('idle'))
@@ -841,7 +841,7 @@ return {
         setMode('butterfly')
         showBubble('蝴蝶别跑！看我的～扑！', 6200)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, x: 0, z: 6, ry: 6, y: 0, rz: 0, sx: 1, s: 1 }, wait: 1100 },
+          { set: { closed: false, happy: false, walking: false, ry: 6, y: 0, rz: 0, sx: 1, s: 1 }, wait: 1100 },
           { set: { ry: -6 }, wait: 1100 },
           { set: { ry: 6 }, wait: 1100 },
           { set: { ry: -4 }, wait: 1100 },
@@ -852,31 +852,31 @@ return {
         setMode('nap')
         showBubble('呼噜……', 6600)
         runSeq([
-          { set: { happy: false, walking: false, x: -14, z: 6, rz: -5, ry: 4, sx: 1, s: 0.97, y: 0, closed: true }, wait: 3200 },
+          { set: { happy: false, walking: false, rz: -5, ry: 4, sx: 1, s: 0.97, closed: true }, wait: 3200 },
           { set: { s: 0.98 }, wait: 2000 },
           { set: { s: 0.97 }, wait: 1500 },
-          { set: { x: 0, rz: 0, ry: 0, s: 1, closed: false } },
+          { set: { rz: 0, ry: 0, s: 1, closed: false } },
         ], () => setMode('idle'))
       }
       function startGroom() {
         setMode('groom')
         showBubble('舔舔爪子…洗脸脸～', 6000)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 300 },
+          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 300 },
           { set: { ry: 10, rz: 4, y: -3 }, wait: 700 },
           { set: { ry: 4 }, wait: 350 },
           { set: { ry: 10 }, wait: 350 },
           { set: { ry: 4 }, wait: 350 },
           { set: { ry: 0, rz: 0, y: 0 }, wait: 300 },
           { set: { ry: -10, rz: -4, y: -3 }, wait: 700 },
-          { set: { ry: 0, rz: 0, y: 0, happy: false } },
+          { set: { ry: 0, rz: 0, happy: false } },
         ], () => setMode('idle'))
       }
       function startYawn() {
         setMode('yawn')
         showBubble('哈啊……', 5000)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
+          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 250 },
           { set: { ry: -12, rz: -3, y: -4 }, wait: 420 },
           { set: { ry: -18, rz: 0, y: -5 }, wait: 420 },
           { set: { ry: -12 }, wait: 520 },
@@ -888,19 +888,19 @@ return {
         setMode('stretch')
         showBubble('伸个懒腰～起来走两步吧！', 6000)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
+          { set: { closed: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1, happy: true }, wait: 250 },
           { set: { sx: 1.14, s: 0.9, y: -2, ry: 6 }, wait: 1100 },
           { set: { sx: 1.1, s: 0.94, y: -1 }, wait: 700 },
           { set: { sx: 1.14, s: 0.9, y: -2 }, wait: 800 },
           { set: { sx: 1, s: 1.04, y: -8 }, wait: 500 },
-          { set: { sx: 1, s: 1, y: 0, happy: false } },
+          { set: { sx: 1, s: 1, happy: false } },
         ], () => setMode('idle'))
       }
       function startEyes() {
         setMode('eyes')
         showBubble('看看远方，让眼睛休息一下下吧～', 6000)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, rz: 0, sx: 1, s: 1, happy: true, ry: 10, y: 0 }, wait: 1300 },
+          { set: { closed: false, walking: false, rz: 0, sx: 1, s: 1, happy: true, ry: 10 }, wait: 1300 },
           { set: { ry: -8 }, wait: 1300 },
           { set: { ry: 8 }, wait: 1200 },
           { set: { ry: 0, happy: false } },
@@ -910,7 +910,7 @@ return {
         setMode('relax')
         showBubble('…主人，我好喜欢你～', 4500)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 900 },
+          { set: { closed: false, walking: false, ry: 6, rz: -4, sx: 1, s: 1, happy: true }, wait: 900 },
           { set: { happy: false, closed: true }, wait: 380 },
           { set: { closed: false, happy: true }, wait: 720 },
           { set: { ry: 3, rz: -2 }, wait: 700 },
@@ -921,16 +921,16 @@ return {
         setMode('curious')
         showBubble('？那是什么呀…', 4200)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
+          { set: { closed: false, walking: false, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
           { set: { ry: -6, rz: -10 }, wait: 900 },
-          { set: { ry: 0, rz: 0, y: 0, happy: false } },
+          { set: { ry: 0, rz: 0, happy: false } },
         ], () => setMode('idle'))
       }
       function startWater() {
         setMode('drink')
         showBubble('咕咚咕咚…好好喝呀！', 3400)
         runSeq([
-          { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0 }, wait: 200 },
+          { set: { closed: false, happy: false, walking: false, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
           crouch(),
           ...wiggle(),
           { set: { walking: true, x: -34, y: 0, s: 1 }, wait: 1150 },
@@ -972,7 +972,6 @@ return {
         else { startEyes(); finishBusy(7200) }
       }
 
-      // reminder scheduler
       React.useEffect(() => {
         let nextAt = Date.now() + getState().intervalMin * 60000
         let prevKey = getState().intervalMin + ':' + getState().remindersOn
@@ -995,7 +994,7 @@ return {
         return () => { unsub(); dispose() }
       }, [])
 
-      // idle behavior loop: every ~20s of idling, one random behavior
+      // idle behavior loop
       React.useEffect(() => {
         let alive = true
         let outer = null
@@ -1028,31 +1027,14 @@ return {
         }, '🐾 小猫咪回来')
       }
 
-      const headRy = pose.ry + look.x * 26
-      const headRz = pose.rz * 0.5 + look.y * 4
-      const catStyle = {
-        transform: 'translateX(' + pose.x + 'px) translateY(' + pose.y + 'px) rotateY(' + pose.ry * 0.5 + 'deg) rotate(' + pose.rz + 'deg) scale(' + pose.sx + ',' + pose.s + ')',
-        zIndex: pose.z,
-      }
-      const headStyle = {
-        transform: 'rotateY(' + headRy + 'deg) rotateZ(' + headRz + 'deg)',
-      }
-      const eyeLook = {
-        transform: 'translate(' + (look.x * 3).toFixed(1) + 'px,' + (look.y * 2).toFixed(1) + 'px)',
-      }
       const shadowStyle = {
         left: (118 + pose.x) + 'px',
         transform: 'scale(' + Math.max(0.55, 1 + pose.y / 240) + ')',
         opacity: Math.max(0.22, 1 + pose.y / 90),
       }
       const bubbleCls = 'dsp-bubble' + (bubbleFade ? ' dsp-bubble--fade' : '')
-      const walkCls = 'dsp-cat-walk' + (pose.walking ? ' dsp-cat-walk--on' : '')
       const bfCls = 'dsp-butterflies' + (mode === 'butterfly' ? ' dsp-butterflies--on' : '')
       const napCls = 'dsp-napfx' + (mode === 'nap' ? ' dsp-napfx--on' : '')
-      const catCls = 'dsp-cat' + (mode === 'yawn' ? ' dsp-cat--yawn' : '')
-      const eyeCls = 'dsp-cat-eye' +
-        (pose.happy ? ' dsp-cat-eye--happy' : '') +
-        (pose.closed ? ' dsp-cat-eye--closed' : '')
 
       function onPointerDown(e) {
         if (e.button !== 0) return
@@ -1095,7 +1077,7 @@ return {
         setHearts((n) => n + 1)
         showBubble(pick(CLICK_LINES), 6000)
         runSeq([
-          { set: { closed: false, walking: false, x: 0, z: 6, sx: 1, happy: true, ry: -8, rz: 0, s: 1.04, y: -6 }, wait: 620 },
+          { set: { closed: false, walking: false, sx: 1, happy: true, ry: -8, rz: 0, s: 1.04, y: -6 }, wait: 620 },
           { set: { ry: 8, y: 0 }, wait: 520 },
           { set: { ry: 0, s: 1 } },
         ])
@@ -1151,41 +1133,7 @@ return {
             h('div', { className: 'dsp-snot' }),
             h('div', { className: 'dsp-dream' }, '🍗 梦见大餐…'),
           ),
-          h('div', { className: 'dsp-cat-z', style: catStyle },
-            h('div', { className: walkCls },
-              h('div', { className: catCls },
-                h('div', { className: 'dsp-cat-tail' }),
-                h('div', { className: 'dsp-h3d', style: headStyle },
-                  h('div', { className: 'dsp-h3d-b' }),
-                  h('div', { className: 'dsp-cat-ear dsp-cat-ear--l' }),
-                  h('div', { className: 'dsp-cat-ear dsp-cat-ear--r' }),
-                  h('div', { className: 'dsp-h3d-f' },
-                    h('div', { className: 'dsp-cat-face' },
-                      h('div', { className: 'dsp-eye-pos dsp-eye-pos--l', style: eyeLook },
-                        h('div', { className: eyeCls }),
-                      ),
-                      h('div', { className: 'dsp-eye-pos dsp-eye-pos--r', style: eyeLook },
-                        h('div', { className: eyeCls }),
-                      ),
-                      h('div', { className: 'dsp-cat-nose' }),
-                      h('div', { className: 'dsp-cat-blush dsp-cat-blush--l' }),
-                      h('div', { className: 'dsp-cat-blush dsp-cat-blush--r' }),
-                      h('div', { className: 'dsp-cat-yawn' }),
-                      h('div', { className: 'dsp-cat-mouth' }),
-                      h('div', { className: 'dsp-whisker dsp-whisker--l1' }),
-                      h('div', { className: 'dsp-whisker dsp-whisker--l2' }),
-                      h('div', { className: 'dsp-whisker dsp-whisker--r1' }),
-                      h('div', { className: 'dsp-whisker dsp-whisker--r2' }),
-                    ),
-                  ),
-                ),
-                h('div', { className: 'dsp-cat-body' }),
-                h('div', { className: 'dsp-cat-scarf' }),
-                h('div', { className: 'dsp-cat-paw dsp-cat-paw--l' + (mode === 'stretch' || mode === 'groom' ? ' dsp-cat-paw--up' : '') }),
-                h('div', { className: 'dsp-cat-paw dsp-cat-paw--r' + (mode === 'butterfly' ? ' dsp-cat-paw--swat' : '') }),
-              ),
-            ),
-          ),
+          h('canvas', { className: 'dsp-canvas', ref: canvasRef }),
         ),
         bigPhase
           ? h('div', { className: 'dsp-big' + (bigPhase === 'out' ? ' dsp-big--out' : '') },
@@ -1219,7 +1167,7 @@ return {
       const intervalMin = useStore((s) => s.intervalMin)
       const visible = useStore((s) => s.visible)
       return h('div', { className: 'dsp-settings' },
-        h('p', { className: 'dsp-settings-desc' }, '真猫习性的 3D 猫咪：会跟着你的鼠标转头、不对称眨眼、舔毛、打哈欠、歪头好奇，到点变身巨猫敲屏提醒你喝水～（纯文字卖萌✨）'),
+        h('p', { className: 'dsp-settings-desc' }, 'Canvas 3D 软渲染的猫咪：真实光影 + 3D 头部转向 + 弹性动作，跟着鼠标转头、不对称眨眼、舔毛、打哈欠、歪头好奇，到点变身巨猫敲屏提醒你喝水～（纯文字卖萌✨）'),
         h('div', { className: 'dsp-settings-row' },
           h('span', { className: 'dsp-settings-label' }, '喝水 / 活动提醒'),
           h(Switch, { on: remindersOn, onChange: (v) => setState({ remindersOn: v }) }),
