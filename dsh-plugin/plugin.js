@@ -552,108 +552,114 @@ return {
         const cy_ = Math.cos(headYaw), sy_ = Math.sin(headYaw)
         function faceX(lx, lz) { return lx * cy_ - lz * sy_ }
 
-        const tw = Math.sin(S.t * 1.8) * 0.55 + Math.sin(S.t * 0.9) * 0.25
-        let tx = -30, ty = 22
-        for (let i = 0; i < 5; i++) {
-          const a = tw + i * 0.16
-          tx += Math.cos(a) * 8
-          ty += Math.sin(a) * 5 + i * 0.6
+        const tw = Math.sin(S.t * 1.8) * 0.5 + Math.sin(S.t * 0.9) * 0.2
+        let tx = -30, ty = 26
+        for (let i = 0; i < 4; i++) {
+          const a = tw + i * 0.2
+          tx += Math.cos(a) * 9
+          ty += Math.sin(a) * 6 + i * 1.2
           const p = P(tx, ty + 2, 4 - i)
-          const r = 5.5 - i * 0.6
-          push(2 - i, () => ell(p.x, p.y, r, r * 1.35, '#ffe9cc', '#f2c890'))
+          const r = 6.5 - i * 0.9
+          push(2 - i, () => ell(p.x, p.y, r, r * 1.3, '#ffe9cc', '#f2c890'))
         }
 
-        const bodyY = 30 + breathe * 0.6 + bob
+        const bodyY = 34 + breathe * 0.6 + bob
         const bx = S.sx, by = S.s * (S.closed ? 0.97 : 1)
-        push(10, () => ell(P(0, bodyY, 8).x, P(0, bodyY, 8).y, 34 * bx, 30 * by, '#fff3dd', '#f5cf9e'))
-        push(10.5, () => ell(P(0, bodyY - 6, 14).x, P(0, bodyY - 6, 14).y, 18 * bx, 15 * by, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'))
-        push(11, () => ell(P(0, bodyY + 22, 14).x, P(0, bodyY + 22, 14).y, 26 * bx, 8, '#ff9dbe', '#ff6f9c'))
-        push(11.5, () => ell(P(0, bodyY + 22, 16).x, P(0, bodyY + 22, 16).y, 8, 6, '#ffc3d6', '#ff9dbe'))
+        push(10, () => ell(P(0, bodyY, 8).x, P(0, bodyY, 8).y, 32 * bx, 27 * by, '#fff3dd', '#f5cf9e'))
+        push(10.5, () => ell(P(0, bodyY - 5, 14).x, P(0, bodyY - 5, 14).y, 17 * bx, 12 * by, 'rgba(255,255,255,0.55)', 'rgba(255,255,255,0)'))
 
         const pawUpL = S.mode === 'stretch' || S.mode === 'groom'
         const swatR = S.mode === 'butterfly'
-        const plx = -15, prx = 15
-        const plY = 6 + (pawUpL ? Math.abs(Math.sin(S.t * 5)) * -16 : Math.max(0, Math.sin(S.t * 12 + 0.8)) * -2.4) + (S.mode === 'groom' ? -4 : 0)
-        const prY = 6 + (swatR ? -Math.abs(Math.sin(S.t * 9)) * 14 : Math.max(0, Math.sin(S.t * 12)) * -2.4)
-        push(9, () => ell(P(plx, plY, 12).x, P(plx, plY, 12).y, 12, 8, '#ffe9cc', '#f2c890'))
-        push(9, () => ell(P(prx, prY, 12).x, P(prx, prY, 12).y, 12, 8, '#ffe9cc', '#f2c890'))
-        push(9.1, () => ell(P(plx, plY + 4, 13).x, P(plx, plY + 4, 13).y, 5, 3.4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
-        push(9.1, () => ell(P(prx, prY + 4, 13).x, P(prx, prY + 4, 13).y, 5, 3.4, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
+        const plx = -16, prx = 16
+        const plY = 8 + (pawUpL ? Math.abs(Math.sin(S.t * 5)) * -15 : Math.max(0, Math.sin(S.t * 12 + 0.8)) * -2.4) + (S.mode === 'groom' ? -4 : 0)
+        const prY = 8 + (swatR ? -Math.abs(Math.sin(S.t * 9)) * 13 : Math.max(0, Math.sin(S.t * 12)) * -2.4)
+        push(9, () => ell(P(plx, plY, 12).x, P(plx, plY, 12).y, 13, 9, '#ffe9cc', '#f2c890'))
+        push(9, () => ell(P(prx, prY, 12).x, P(prx, prY, 12).y, 13, 9, '#ffe9cc', '#f2c890'))
+        push(9.1, () => ell(P(plx, plY + 5, 13).x, P(plx, plY + 5, 13).y, 5.5, 3.8, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
+        push(9.1, () => ell(P(prx, prY + 5, 13).x, P(prx, prY + 5, 13).y, 5.5, 3.8, 'rgba(255,150,160,0.85)', 'rgba(255,120,140,0.85)'))
 
         const headY = 72 + breathe + bob * 0.6 + (S.mode === 'yawn' ? -3 : 0)
         const hp = P(0, headY, 0)
-        const hr = 30
-        push(20, () => ell(hp.x, hp.y, hr, hr * 0.92, '#fff6e4', '#f7d5a5'))
+        const hr = 33
+        push(20, () => ell(hp.x, hp.y, hr, hr * 0.95, '#fff6e4', '#f7d5a5'))
         push(20.4, () => ell(hp.x - hr * 0.28, hp.y - hr * 0.34, hr * 0.5, hr * 0.34, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'))
 
-        const eL = faceX(-21, 4), eR = faceX(21, 4)
-        const elx = hp.x + eL, ely = hp.y - 34 - Math.sin(headPitch) * 18 + ear.l * -4
-        const erx = hp.x + eR, ery = hp.y - 34 - Math.sin(headPitch) * 18 + ear.r * -4
-        const ew = 13 * (0.6 + 0.4 * Math.cos(headYaw))
-        push(19, () => tri(elx - ew, ely + 16, elx + ew, ely + 16, elx, ely, '#ffe4bd', '#f0c48e'))
-        push(19, () => tri(erx - ew, ery + 16, erx + ew, ery + 16, erx, ery, '#ffe4bd', '#f0c48e'))
-        push(18.6, () => tri(elx - ew * 0.5, ely + 15, elx + ew * 0.5, ely + 15, elx, ely + 6, '#ffb8cc', '#ff9db4'))
-        push(18.6, () => tri(erx - ew * 0.5, ery + 15, erx + ew * 0.5, ery + 15, erx, ery + 6, '#ffb8cc', '#ff9db4'))
+        const eL = faceX(-14, 4), eR = faceX(14, 4)
+        const elx = hp.x + eL, ely = hp.y - 40 - Math.sin(headPitch) * 18 + ear.l * -4
+        const erx = hp.x + eR, ery = hp.y - 40 - Math.sin(headPitch) * 18 + ear.r * -4
+        const ew = 18 * (0.6 + 0.4 * Math.cos(headYaw))
+        const eh = 22
+        push(19, () => tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'))
+        push(19, () => tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'))
+        push(18.6, () => tri(elx - ew * 0.55, ely + eh - 2, elx + ew * 0.55, ely + eh - 2, elx, ely + 7, '#ffb8cc', '#ff9db4'))
+        push(18.6, () => tri(erx - ew * 0.55, ery + eh - 2, erx + ew * 0.55, ery + eh - 2, erx, ery + 7, '#ffb8cc', '#ff9db4'))
+
+        push(22, () => ell(P(0, 42, 16).x, P(0, 42, 16).y, 22, 7, '#ff9dbe', '#ff6f9c'))
+        push(22.5, () => ell(P(0, 42, 18).x, P(0, 42, 18).y, 7, 5, '#ffc3d6', '#ff9dbe'))
 
         push(21, () => {
           const pitch = Math.sin(headPitch)
-          const eyeY0 = hp.y - 6 - pitch * 8
+          const eyeY0 = hp.y + 1 - pitch * 6
           const eyeOpenL = S.happy || S.closed ? 1 : 1 - blink.l * 0.92
           const eyeOpenR = S.happy || S.closed ? 1 : 1 - blink.r * 0.92
-          const exL = faceX(-13, 10), exR = faceX(13, 10)
-          const exl = hp.x + exL + S.look.x * 2, exr = hp.x + exR + S.look.x * 2
-          const ewl = 5.6 * (0.5 + 0.5 * Math.cos(headYaw)), ewr = ewl
-          const ehl = 7.5 * eyeOpenL, ehr = 7.5 * eyeOpenR
+          const exL = faceX(-15, 10), exR = faceX(15, 10)
+          const exl = hp.x + exL + S.look.x * 2.5, exr = hp.x + exR + S.look.x * 2.5
+          const ewl = 7 * (0.5 + 0.5 * Math.cos(headYaw)), ewr = ewl
+          const ehl = 9.5 * eyeOpenL, ehr = 9.5 * eyeOpenR
           if (S.happy || S.closed) {
             const arc = S.closed ? -1 : 1
             ctx.strokeStyle = '#5b4636'
-            ctx.lineWidth = 2.2
+            ctx.lineWidth = 2.4
             ctx.lineCap = 'round'
             ctx.beginPath()
-            ctx.arc(exl, eyeY0, 5, Math.PI * (arc > 0 ? 0 : 0.15), Math.PI * (arc > 0 ? 1 : 0.85), arc < 0)
+            ctx.arc(exl, eyeY0, 6, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0)
             ctx.stroke()
             ctx.beginPath()
-            ctx.arc(exr, eyeY0, 5, Math.PI * (arc > 0 ? 0 : 0.15), Math.PI * (arc > 0 ? 1 : 0.85), arc < 0)
+            ctx.arc(exr, eyeY0, 6, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0)
             ctx.stroke()
           } else {
             ell(exl, eyeY0, ewl, ehl, '#5b4636', '#4a3828')
             ell(exr, eyeY0, ewl, ehr, '#5b4636', '#4a3828')
-            ell(exl - ewl * 0.25, eyeY0 - ehl * 0.3, ewl * 0.4, ehl * 0.32, 'rgba(255,255,255,0.9)', 'rgba(255,255,255,0)')
-            ell(exr - ewl * 0.25, eyeY0 - ehl * 0.3, ewl * 0.4, ehl * 0.32, 'rgba(255,255,255,0.9)', 'rgba(255,255,255,0)')
+            ell(exl - ewl * 0.22, eyeY0 - ehl * 0.28, ewl * 0.45, ehl * 0.38, 'rgba(255,255,255,0.95)', 'rgba(255,255,255,0)')
+            ell(exr - ewl * 0.22, eyeY0 - ehl * 0.28, ewl * 0.45, ehl * 0.38, 'rgba(255,255,255,0.95)', 'rgba(255,255,255,0)')
+            ell(exl + ewl * 0.25, eyeY0 + ehl * 0.2, ewl * 0.2, ehl * 0.16, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)')
+            ell(exr + ewl * 0.25, eyeY0 + ehl * 0.2, ewl * 0.2, ehl * 0.16, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)')
           }
-          const bxl = faceX(-20, 6), bxr = faceX(20, 6)
-          ell(hp.x + bxl, hp.y + 4, 6.5, 3.6, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
-          ell(hp.x + bxr, hp.y + 4, 6.5, 3.6, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
+          const bxl = faceX(-24, 6), bxr = faceX(24, 6)
+          ell(hp.x + bxl, hp.y + 5, 7.5, 4, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
+          ell(hp.x + bxr, hp.y + 5, 7.5, 4, 'rgba(255,138,158,0.8)', 'rgba(255,120,145,0.5)', 0.9)
           const nx = hp.x + faceX(0, 14)
-          ell(nx, hp.y + 10 - pitch * 4, 3.4, 2.6, '#ff9db4', '#ff7f9e')
+          ell(nx, hp.y + 12 - pitch * 4, 3.2, 2.6, '#ff9db4', '#ff7f9e')
           const mx = hp.x + faceX(0, 14)
-          const my = hp.y + 15 - pitch * 5
+          const my = hp.y + 17 - pitch * 5
           if (S.mode === 'yawn') {
-            ell(mx, my + 2, 8, 7, '#7a4a35', '#5f3525')
-            ell(mx, my + 4, 5, 3.4, '#ff9db4', '#ff7f9e')
+            ell(mx, my + 2, 8.5, 7.5, '#7a4a35', '#5f3525')
+            ell(mx, my + 4.5, 5, 3.6, '#ff9db4', '#ff7f9e')
           } else {
             ctx.strokeStyle = '#5b4636'
             ctx.lineWidth = 1.8
             ctx.lineCap = 'round'
             ctx.beginPath()
-            ctx.arc(mx, my, 4, 0, Math.PI)
+            ctx.moveTo(mx - 4, my)
+            ctx.quadraticCurveTo(mx - 2, my + 2.4, mx, my + 1)
+            ctx.quadraticCurveTo(mx + 2, my + 2.4, mx + 4, my)
             ctx.stroke()
           }
           ctx.strokeStyle = 'rgba(91,70,54,0.5)'
           ctx.lineWidth = 1
-          const wx = hp.x + faceX(-22, 4), wy = hp.y + 2
-          ctx.beginPath(); ctx.moveTo(wx, wy - 5); ctx.quadraticCurveTo(wx - 14, wy - 6, wx - 18, wy - 9); ctx.stroke()
-          ctx.beginPath(); ctx.moveTo(wx, wy + 2); ctx.quadraticCurveTo(wx - 14, wy + 4, wx - 18, wy + 4); ctx.stroke()
-          const wx2 = hp.x + faceX(22, 4)
-          ctx.beginPath(); ctx.moveTo(wx2, wy - 5); ctx.quadraticCurveTo(wx2 + 14, wy - 6, wx2 + 18, wy - 9); ctx.stroke()
-          ctx.beginPath(); ctx.moveTo(wx2, wy + 2); ctx.quadraticCurveTo(wx2 + 14, wy + 4, wx2 + 18, wy + 4); ctx.stroke()
-          ctx.strokeStyle = 'rgba(200,150,110,0.4)'
-          ctx.lineWidth = 2
+          const wx = hp.x + faceX(-26, 4), wy = hp.y + 3
+          ctx.beginPath(); ctx.moveTo(wx, wy - 5); ctx.quadraticCurveTo(wx - 15, wy - 6, wx - 20, wy - 9); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(wx, wy + 2); ctx.quadraticCurveTo(wx - 15, wy + 4, wx - 20, wy + 4); ctx.stroke()
+          const wx2 = hp.x + faceX(26, 4)
+          ctx.beginPath(); ctx.moveTo(wx2, wy - 5); ctx.quadraticCurveTo(wx2 + 15, wy - 6, wx2 + 20, wy - 9); ctx.stroke()
+          ctx.beginPath(); ctx.moveTo(wx2, wy + 2); ctx.quadraticCurveTo(wx2 + 15, wy + 4, wx2 + 20, wy + 4); ctx.stroke()
+          ctx.strokeStyle = 'rgba(200,150,110,0.45)'
+          ctx.lineWidth = 2.4
           for (let i = 0; i < 3; i++) {
             const sx = hp.x + faceX(-8 + i * 8, 2)
             ctx.beginPath()
-            ctx.moveTo(sx, hp.y - 18 + pitch * 4)
-            ctx.quadraticCurveTo(sx + (i - 1) * 2, hp.y - 24, sx, hp.y - 27 + pitch * 2)
+            ctx.moveTo(sx, hp.y - 20 + pitch * 4)
+            ctx.quadraticCurveTo(sx + (i - 1) * 2, hp.y - 26, sx, hp.y - 29 + pitch * 2)
             ctx.stroke()
           }
         })
