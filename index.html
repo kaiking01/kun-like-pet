@@ -693,14 +693,16 @@ body {
       push(20.4, function () { ell(hp.x - hr * 0.28, hp.y - hr * 0.34, hr * 0.5, hr * 0.34, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'); });
 
       var eL = faceX(-16, 4), eR = faceX(16, 4);
-      var elx = hp.x + eL, ely = hp.y - 40 - Math.sin(headPitch) * 18 + ear.l * -4;
-      var erx = hp.x + eR, ery = hp.y - 40 - Math.sin(headPitch) * 18 + ear.r * -4;
+      var elx = hp.x + eL, erx = hp.x + eR;
+      var eTop = hp.y - hr - 24;
+      var ely = eTop - Math.sin(headPitch) * 18 + ear.l * -5;
+      var ery = eTop - Math.sin(headPitch) * 18 + ear.r * -5;
       var ew = 25 * (0.6 + 0.4 * Math.cos(headYaw));
-      var eh = 26;
-      push(19, function () { tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'); });
-      push(19, function () { tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'); });
-      push(18.6, function () { tri(elx - ew * 0.55, ely + eh - 2, elx + ew * 0.55, ely + eh - 2, elx, ely + 8, '#ffb8cc', '#ff9db4'); });
-      push(18.6, function () { tri(erx - ew * 0.55, ery + eh - 2, erx + ew * 0.55, ery + eh - 2, erx, ery + 8, '#ffb8cc', '#ff9db4'); });
+      var eh = 27;
+      push(20.5, function () { tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'); });
+      push(20.5, function () { tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'); });
+      push(20.1, function () { tri(elx - ew * 0.55, ely + eh - 4, elx + ew * 0.55, ely + eh - 4, elx, ely + 7, '#ffb8cc', '#ff9db4'); });
+      push(20.1, function () { tri(erx - ew * 0.55, ery + eh - 4, erx + ew * 0.55, ery + eh - 4, erx, ery + 7, '#ffb8cc', '#ff9db4'); });
 
       push(22, function () { ell(P(0, 44, 16).x, P(0, 44, 16).y, 24, 7, '#ff9dbe', '#ff6f9c'); });
       push(22.5, function () { ell(P(0, 44, 18).x, P(0, 44, 18).y, 7, 5, '#ffc3d6', '#ff9dbe'); });
@@ -718,8 +720,8 @@ body {
           ctx.strokeStyle = '#5b4636';
           ctx.lineWidth = 2.6;
           ctx.lineCap = 'round';
-          ctx.beginPath(); ctx.arc(exl, eyeY0, 6.5, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0); ctx.stroke();
-          ctx.beginPath(); ctx.arc(exr, eyeY0, 6.5, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0); ctx.stroke();
+          ctx.beginPath(); ctx.arc(exl, eyeY0, 6.5, 0, Math.PI, arc > 0); ctx.stroke();
+          ctx.beginPath(); ctx.arc(exr, eyeY0, 6.5, 0, Math.PI, arc > 0); ctx.stroke();
         } else {
           ell(exl, eyeY0, ewl, ehl, '#3d2f24', '#2b211a');
           ell(exr, eyeY0, ewl, ehr, '#3d2f24', '#2b211a');

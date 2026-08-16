@@ -585,14 +585,16 @@ return {
         push(20.4, () => ell(hp.x - hr * 0.28, hp.y - hr * 0.34, hr * 0.5, hr * 0.34, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'))
 
         const eL = faceX(-16, 4), eR = faceX(16, 4)
-        const elx = hp.x + eL, ely = hp.y - 40 - Math.sin(headPitch) * 18 + ear.l * -4
-        const erx = hp.x + eR, ery = hp.y - 40 - Math.sin(headPitch) * 18 + ear.r * -4
+        const elx = hp.x + eL, erx = hp.x + eR
+        const eTop = hp.y - hr - 24
+        const ely = eTop - Math.sin(headPitch) * 18 + ear.l * -5
+        const ery = eTop - Math.sin(headPitch) * 18 + ear.r * -5
         const ew = 25 * (0.6 + 0.4 * Math.cos(headYaw))
-        const eh = 26
-        push(19, () => tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'))
-        push(19, () => tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'))
-        push(18.6, () => tri(elx - ew * 0.55, ely + eh - 2, elx + ew * 0.55, ely + eh - 2, elx, ely + 8, '#ffb8cc', '#ff9db4'))
-        push(18.6, () => tri(erx - ew * 0.55, ery + eh - 2, erx + ew * 0.55, ery + eh - 2, erx, ery + 8, '#ffb8cc', '#ff9db4'))
+        const eh = 27
+        push(20.5, () => tri(elx - ew, ely + eh, elx + ew, ely + eh, elx, ely, '#ffe4bd', '#f0c48e'))
+        push(20.5, () => tri(erx - ew, ery + eh, erx + ew, ery + eh, erx, ery, '#ffe4bd', '#f0c48e'))
+        push(20.1, () => tri(elx - ew * 0.55, ely + eh - 4, elx + ew * 0.55, ely + eh - 4, elx, ely + 7, '#ffb8cc', '#ff9db4'))
+        push(20.1, () => tri(erx - ew * 0.55, ery + eh - 4, erx + ew * 0.55, ery + eh - 4, erx, ery + 7, '#ffb8cc', '#ff9db4'))
 
         push(22, () => ell(P(0, 44, 16).x, P(0, 44, 16).y, 24, 7, '#ff9dbe', '#ff6f9c'))
         push(22.5, () => ell(P(0, 44, 18).x, P(0, 44, 18).y, 7, 5, '#ffc3d6', '#ff9dbe'))
@@ -612,10 +614,10 @@ return {
             ctx.lineWidth = 2.6
             ctx.lineCap = 'round'
             ctx.beginPath()
-            ctx.arc(exl, eyeY0, 6.5, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0)
+            ctx.arc(exl, eyeY0, 6.5, 0, Math.PI, arc > 0)
             ctx.stroke()
             ctx.beginPath()
-            ctx.arc(exr, eyeY0, 6.5, Math.PI * (arc > 0 ? 0 : 0.12), Math.PI * (arc > 0 ? 1 : 0.88), arc < 0)
+            ctx.arc(exr, eyeY0, 6.5, 0, Math.PI, arc > 0)
             ctx.stroke()
           } else {
             ell(exl, eyeY0, ewl, ehl, '#3d2f24', '#2b211a')
