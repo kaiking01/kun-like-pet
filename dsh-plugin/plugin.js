@@ -228,16 +228,7 @@ return {
   border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
   transform: rotateY(180deg) translateZ(15px);
 }
-/* 左右侧面：无边框无圆角——正对时侧立不可见，转头时才露出侧面 */
-.dsp-h3d-l, .dsp-h3d-r {
-  position: absolute; top: 50%; width: 28px; height: 84px;
-  margin-top: -42px;
-  background: linear-gradient(180deg, #f6d6a8, #f0c48e);
-}
-.dsp-h3d-l { left: 50%; margin-left: -14px; transform: rotateY(-90deg) translateZ(46px); }
-.dsp-h3d-r { left: 50%; margin-left: -14px; transform: rotateY(90deg) translateZ(46px); }
-
-/* ears live on the 3D head so they turn with it */
+/* 左右侧面已移除：头部为正面 + 脑后两层，3D 转身靠透视收缩 */
 .dsp-cat-ear {
   position: absolute; top: -16px; width: 0; height: 0;
   border-left: 20px solid transparent; border-right: 20px solid transparent;
@@ -1166,8 +1157,6 @@ return {
                 h('div', { className: 'dsp-cat-tail' }),
                 h('div', { className: 'dsp-h3d', style: headStyle },
                   h('div', { className: 'dsp-h3d-b' }),
-                  h('div', { className: 'dsp-h3d-l' }),
-                  h('div', { className: 'dsp-h3d-r' }),
                   h('div', { className: 'dsp-cat-ear dsp-cat-ear--l' }),
                   h('div', { className: 'dsp-cat-ear dsp-cat-ear--r' }),
                   h('div', { className: 'dsp-h3d-f' },
