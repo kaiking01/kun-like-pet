@@ -959,7 +959,7 @@ body {
 
   function startPeek() {
     mode = 'peek'; renderMode();
-    showBubble('躲猫猫中…喵？看见我了吗？', 6500);
+    showBubble('喵？看见我了吗？', 6500);
     runSeq([
       { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
       crouch(),
@@ -1014,7 +1014,7 @@ body {
   }
   function startYawn() {
     mode = 'yawn'; renderMode();
-    showBubble('哈啊……（伸个懒腰打个哈欠）', 5000);
+    showBubble('哈啊……', 5000);
     runSeq([
       { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
       { set: { ry: -12, rz: -3, y: -4 }, wait: 420 },
@@ -1048,7 +1048,7 @@ body {
   }
   function startRelax() {
     mode = 'relax'; renderMode();
-    showBubble('（慢慢眨眨眼）…喜欢你哦～', 4500);
+    showBubble('（慢慢眨眨眼）…主人，我好喜欢你～', 4500);
     runSeq([
       { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 1400 },
       { set: { ry: 3, rz: -2 }, wait: 900 },
@@ -1057,7 +1057,7 @@ body {
   }
   function startCurious() {
     mode = 'curious'; renderMode();
-    showBubble('？（歪头）那是什么呀…', 4200);
+    showBubble('？那是什么呀…', 4200);
     runSeq([
       { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
       { set: { ry: -6, rz: -10 }, wait: 900 },
@@ -1132,11 +1132,11 @@ body {
         else if (name === 'yawn') startYawn();
         else if (name === 'curious') startCurious();
         else startRelax();
-        setTimeout(behaviorLoop, 9500);
+        setTimeout(behaviorLoop, 1000);
       } else {
         behaviorLoop();
       }
-    }, 8500);
+    }, 20000);
   })();
 
   // ============ 交互：点击 ============
@@ -1230,7 +1230,7 @@ body {
   // ============ 欢迎 ============
   applyPose();
   setTimeout(function () {
-    showBubble('喵～我是喝水小助手！我会躲猫猫、捉蝴蝶，还会按时提醒你喝水哦～', 8000);
+    showBubble('喵～我是你的小猫咪！我会躲猫猫、捉蝴蝶，还会按时提醒你喝水哦～', 8000);
   }, 900);
 })();
 </script>

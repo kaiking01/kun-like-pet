@@ -756,7 +756,7 @@ return {
       React.useEffect(() => {
         const t = ctx.timeout(() => {
           if (!mountedRef.current) return
-          showBubble('喵～我是喝水小助手！我会躲猫猫、捉蝴蝶，还会按时提醒你喝水哦～', 8000)
+          showBubble('喵～我是你的小猫咪！我会躲猫猫、捉蝴蝶，还会按时提醒你喝水哦～', 8000)
         }, 900)
         return t
       }, [])
@@ -828,7 +828,7 @@ return {
       // ---------- behaviors ----------
       function startPeek() {
         setMode('peek')
-        showBubble('躲猫猫中…喵？看见我了吗？', 6500)
+        showBubble('喵？看见我了吗？', 6500)
         runSeq([
           { set: { closed: false, happy: false, walking: false, z: 6, ry: 0, rz: 0, sx: 1, s: 1 }, wait: 200 },
           crouch(),
@@ -883,7 +883,7 @@ return {
       }
       function startYawn() {
         setMode('yawn')
-        showBubble('哈啊……（伸个懒腰打个哈欠）', 5000)
+        showBubble('哈啊……', 5000)
         runSeq([
           { set: { closed: false, walking: false, x: 0, z: 6, ry: 0, rz: 0, sx: 1, s: 1, y: 0, happy: true }, wait: 250 },
           { set: { ry: -12, rz: -3, y: -4 }, wait: 420 },
@@ -917,7 +917,7 @@ return {
       }
       function startRelax() {
         setMode('relax')
-        showBubble('（慢慢眨眨眼）…喜欢你哦～', 4500)
+        showBubble('（慢慢眨眨眼）…主人，我好喜欢你～', 4500)
         runSeq([
           { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 1400 },
           { set: { ry: 3, rz: -2 }, wait: 900 },
@@ -926,7 +926,7 @@ return {
       }
       function startCurious() {
         setMode('curious')
-        showBubble('？（歪头）那是什么呀…', 4200)
+        showBubble('？那是什么呀…', 4200)
         runSeq([
           { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: 12, sx: 1, s: 1, y: -3, happy: true }, wait: 900 },
           { set: { ry: -6, rz: -10 }, wait: 900 },
@@ -1002,7 +1002,7 @@ return {
         return () => { unsub(); dispose() }
       }, [])
 
-      // idle behavior loop: real cat random moments
+      // idle behavior loop: every ~20s of idling, one random behavior
       React.useEffect(() => {
         let alive = true
         let outer = null
@@ -1020,9 +1020,9 @@ return {
               else if (name === 'yawn') startYawn()
               else if (name === 'curious') startCurious()
               else startRelax()
-              ctx.timeout(() => { if (alive) loop() }, 9500)
+              ctx.timeout(() => { if (alive) loop() }, 1000)
             } else loop()
-          }, 8500)
+          }, 20000)
         }
         loop()
         return () => { alive = false; if (outer) outer() }
