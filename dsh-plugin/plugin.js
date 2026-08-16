@@ -109,35 +109,61 @@ return {
 }
 @keyframes dsp-water { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px); } }
 
-/* ================= butterflies (3D flap + depth flight) ================= */
+/* ================= butterflies (natural flight: banking + hover + dart) ================= */
 .dsp-butterflies {
   position: absolute; inset: 0; z-index: 15; pointer-events: none;
   opacity: 0; transition: opacity 0.6s ease;
 }
 .dsp-butterflies--on { opacity: 1; }
 .dsp-bfly { position: absolute; font-size: 20px; }
-.dsp-bfly--1 { left: 4px; top: 60px; animation: dsp-fly1 4.2s ease-in-out infinite; }
-.dsp-bfly--2 { left: 76px; top: 30px; animation: dsp-fly2 5.2s ease-in-out infinite; }
+.dsp-bfly--1 { left: 6px; top: 58px; animation: dsp-fly1 7s ease-in-out infinite; }
+.dsp-bfly--2 { left: 78px; top: 26px; animation: dsp-fly2 8.6s ease-in-out infinite; }
+.dsp-bfly--3 { left: 32px; top: 82px; animation: dsp-fly3 6.2s ease-in-out infinite; }
 .dsp-bfly-wing {
   display: inline-block;
   animation: dsp-flap3d 0.32s ease-in-out infinite;
 }
+.dsp-bfly--2 .dsp-bfly-wing { animation-duration: 0.24s; }
+.dsp-bfly--3 .dsp-bfly-wing { animation-duration: 0.4s; }
 @keyframes dsp-flap3d {
   0%, 100% { transform: perspective(400px) rotateY(0deg); }
   50% { transform: perspective(400px) rotateY(78deg); }
 }
+/* 飞行1：花丛右侧悬停 → 急窜右上（banking）→ 悬停 → 急窜左上远处 → 回花丛 */
 @keyframes dsp-fly1 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  20% { transform: translate3d(48px, -18px, 24px) scale(1.14); }
-  40% { transform: translate3d(10px, -54px, 0) scale(1); }
-  60% { transform: translate3d(-26px, -34px, -30px) scale(0.88); }
-  80% { transform: translate3d(16px, -8px, 16px) scale(1.08); }
+  0%, 12% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  24% { transform: translate3d(52px, -30px, 24px) rotateZ(-16deg) scale(1.14); }
+  30% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
+  44% { transform: translate3d(58px, -36px, 24px) rotateZ(6deg) scale(1.14); }
+  56% { transform: translate3d(6px, -72px, -24px) rotateZ(12deg) scale(0.9); }
+  62% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
+  76% { transform: translate3d(-2px, -74px, -24px) rotateZ(-8deg) scale(0.9); }
+  88% { transform: translate3d(-24px, -46px, 14px) rotateZ(18deg) scale(1.08); }
+  94% { transform: translate3d(-14px, -48px, 14px) rotateZ(-10deg) scale(1.08); }
 }
+/* 飞行2：高处悬停 → 俯冲左下 → 盘旋回花丛上方 */
 @keyframes dsp-fly2 {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  25% { transform: translate3d(-52px, -16px, -24px) scale(0.88); }
-  50% { transform: translate3d(-8px, -52px, 26px) scale(1.14); }
-  75% { transform: translate3d(36px, -20px, 0) scale(1); }
+  0%, 10% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  22% { transform: translate3d(-54px, 14px, -18px) rotateZ(14deg) scale(0.92); }
+  28% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
+  40% { transform: translate3d(-60px, 10px, -18px) rotateZ(-10deg) scale(0.92); }
+  52% { transform: translate3d(-8px, -40px, 22px) rotateZ(-16deg) scale(1.12); }
+  58% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
+  72% { transform: translate3d(-2px, -44px, 22px) rotateZ(8deg) scale(1.12); }
+  84% { transform: translate3d(40px, -10px, -12px) rotateZ(-14deg) scale(0.94); }
+  92% { transform: translate3d(30px, -12px, -12px) rotateZ(10deg) scale(0.94); }
+}
+/* 飞行3：花间小范围徘徊 + 小绕圈 */
+@keyframes dsp-fly3 {
+  0%, 8% { transform: translate3d(0, 0, 0) rotateZ(0deg) scale(1); }
+  16% { transform: translate3d(24px, -20px, 10px) rotateZ(-10deg) scale(1.08); }
+  24% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
+  36% { transform: translate3d(18px, -34px, 14px) rotateZ(8deg) scale(1.1); }
+  46% { transform: translate3d(-14px, -48px, 6px) rotateZ(12deg) scale(1.02); }
+  54% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
+  66% { transform: translate3d(-20px, -40px, 6px) rotateZ(-12deg) scale(1.02); }
+  78% { transform: translate3d(-34px, -18px, -10px) rotateZ(14deg) scale(0.94); }
+  88% { transform: translate3d(-16px, -22px, -10px) rotateZ(-10deg) scale(0.94); }
 }
 
 /* ================= cat ================= */
@@ -202,14 +228,14 @@ return {
   border-radius: 50% 50% 46% 46% / 56% 56% 44% 44%;
   transform: rotateY(180deg) translateZ(15px);
 }
+/* 左右侧面：无边框无圆角——正对时侧立不可见，转头时才露出侧面 */
 .dsp-h3d-l, .dsp-h3d-r {
-  position: absolute; top: 50%; width: 30px; height: 84px;
+  position: absolute; top: 50%; width: 28px; height: 84px;
   margin-top: -42px;
   background: linear-gradient(180deg, #f6d6a8, #f0c48e);
-  border: 2px solid rgba(214, 164, 112, 0.3);
 }
-.dsp-h3d-l { left: 50%; margin-left: -15px; transform: rotateY(-90deg) translateZ(46px); border-radius: 14px 6px 6px 14px; }
-.dsp-h3d-r { left: 50%; margin-left: -15px; transform: rotateY(90deg) translateZ(46px); border-radius: 6px 14px 14px 6px; }
+.dsp-h3d-l { left: 50%; margin-left: -14px; transform: rotateY(-90deg) translateZ(46px); }
+.dsp-h3d-r { left: 50%; margin-left: -14px; transform: rotateY(90deg) translateZ(46px); }
 
 /* ears live on the 3D head so they turn with it */
 .dsp-cat-ear {
@@ -1125,6 +1151,7 @@ return {
           h('div', { className: bfCls },
             h('div', { className: 'dsp-bfly dsp-bfly--1' }, h('span', { className: 'dsp-bfly-wing' }, '🦋')),
             h('div', { className: 'dsp-bfly dsp-bfly--2' }, h('span', { className: 'dsp-bfly-wing' }, '🦋')),
+            h('div', { className: 'dsp-bfly dsp-bfly--3' }, h('span', { className: 'dsp-bfly-wing' }, '🦋')),
           ),
           h('div', { className: napCls },
             h('div', { className: 'dsp-zzz' }, h('span', null, 'z'), h('span', null, 'z'), h('span', null, 'z')),
