@@ -1048,10 +1048,12 @@ body {
   }
   function startRelax() {
     mode = 'relax'; renderMode();
-    showBubble('（慢慢眨眨眼）…主人，我好喜欢你～', 4500);
+    showBubble('…主人，我好喜欢你～', 4500);
     runSeq([
-      { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 1400 },
-      { set: { ry: 3, rz: -2 }, wait: 900 },
+      { set: { closed: false, walking: false, x: 0, z: 6, ry: 6, rz: -4, sx: 1, s: 1, y: 0, happy: true }, wait: 900 },
+      { set: { happy: false, closed: true }, wait: 380 },
+      { set: { closed: false, happy: true }, wait: 720 },
+      { set: { ry: 3, rz: -2 }, wait: 700 },
       { set: { ry: 0, rz: 0, happy: false } }
     ], function () { mode = 'idle'; renderMode(); });
   }
